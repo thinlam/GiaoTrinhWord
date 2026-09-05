@@ -1,3 +1,690 @@
+// =========================================================
+// SHORTCUT UI
+// =========================================================
+
+interface ShortcutDetail {
+  description?: string;
+  steps?: string[];
+  result?: string;
+  tip?: string;
+}
+
+const SHORTCUT_DETAILS: Record<string, ShortcutDetail> = {
+  "Ctrl + A": {
+    description: "Chọn toàn bộ nội dung trong tài liệu.",
+    steps: [
+      "Đặt con trỏ trong tài liệu.",
+      "Nhấn giữ phím Ctrl.",
+      "Nhấn phím A."
+    ],
+    result: "Toàn bộ nội dung trong tài liệu được chọn.",
+    tip: "Thường dùng trước khi đổi font, cỡ chữ, căn chỉnh hoặc sao chép toàn bộ tài liệu."
+  },
+
+  "Ctrl + C": {
+    description: "Sao chép nội dung đã chọn.",
+    steps: [
+      "Bôi đen văn bản, hình ảnh hoặc đối tượng cần sao chép.",
+      "Nhấn giữ phím Ctrl.",
+      "Nhấn phím C."
+    ],
+    result: "Nội dung được lưu vào Clipboard nhưng nội dung gốc vẫn được giữ nguyên.",
+    tip: "Sau khi Copy, dùng Ctrl + V để dán."
+  },
+
+  "Ctrl + X": {
+    description: "Cắt nội dung để di chuyển sang vị trí khác.",
+    steps: [
+      "Chọn nội dung cần di chuyển.",
+      "Nhấn giữ Ctrl.",
+      "Nhấn X.",
+      "Đặt con trỏ tại vị trí mới.",
+      "Nhấn Ctrl + V."
+    ],
+    result: "Nội dung được di chuyển từ vị trí cũ sang vị trí mới.",
+    tip: "Cut khác Copy ở chỗ nội dung được dùng để di chuyển thay vì tạo bản sao."
+  },
+
+  "Ctrl + V": {
+    description: "Dán nội dung đang có trong Clipboard.",
+    steps: [
+      "Copy hoặc Cut nội dung trước.",
+      "Đặt con trỏ tại vị trí cần chèn.",
+      "Nhấn giữ Ctrl.",
+      "Nhấn V."
+    ],
+    result: "Nội dung từ Clipboard được chèn tại vị trí con trỏ.",
+    tip: "Khi dán từ Internet, có thể dùng Paste Options → Keep Text Only để tránh lỗi định dạng."
+  },
+
+  "Ctrl + Z": {
+    description: "Hoàn tác thao tác vừa thực hiện.",
+    steps: [
+      "Khi vừa thực hiện nhầm một thao tác.",
+      "Nhấn giữ Ctrl.",
+      "Nhấn Z."
+    ],
+    result: "Word quay lại trạng thái trước thao tác gần nhất.",
+    tip: "Có thể nhấn Ctrl + Z nhiều lần để hoàn tác nhiều bước."
+  },
+
+  "Ctrl + Y": {
+    description: "Thực hiện lại thao tác vừa Undo.",
+    steps: [
+      "Sau khi dùng Ctrl + Z.",
+      "Nhấn giữ Ctrl.",
+      "Nhấn Y."
+    ],
+    result: "Thao tác vừa bị Undo được thực hiện lại."
+  },
+
+  "Ctrl + N": {
+    description: "Tạo tài liệu Word mới.",
+    steps: [
+      "Nhấn giữ Ctrl.",
+      "Nhấn N."
+    ],
+    result: "Word tạo một Blank Document mới.",
+    tip: "N = New."
+  },
+
+  "Ctrl + O": {
+    description: "Mở tài liệu đã có.",
+    steps: [
+      "Nhấn Ctrl + O.",
+      "Chọn vị trí chứa file.",
+      "Chọn tài liệu.",
+      "Bấm Open."
+    ],
+    result: "Tài liệu được mở trong Word.",
+    tip: "O = Open."
+  },
+
+  "Ctrl + S": {
+    description: "Lưu tài liệu.",
+    steps: [
+      "Nhấn giữ Ctrl.",
+      "Nhấn S.",
+      "Nếu là lần lưu đầu tiên, chọn tên file và vị trí lưu."
+    ],
+    result: "Các thay đổi hiện tại được lưu.",
+    tip: "Nên nhấn Ctrl + S thường xuyên trong quá trình làm việc."
+  },
+
+  "Ctrl + P": {
+    description: "Mở giao diện in tài liệu.",
+    steps: [
+      "Nhấn Ctrl + P.",
+      "Chọn máy in.",
+      "Kiểm tra phạm vi trang.",
+      "Kiểm tra thiết lập.",
+      "Bấm Print."
+    ],
+    result: "Tài liệu được gửi đến máy in khi xác nhận.",
+    tip: "Nên kiểm tra Print Preview trước khi in."
+  },
+
+  "Ctrl + W": {
+    description: "Đóng tài liệu hiện tại.",
+    steps: [
+      "Nhấn Ctrl + W.",
+      "Nếu tài liệu chưa lưu, chọn Save hoặc Don't Save."
+    ],
+    result: "Tài liệu hiện tại được đóng."
+  },
+
+  "Ctrl + B": {
+    description: "Bật hoặc tắt chữ in đậm.",
+    steps: [
+      "Chọn văn bản cần định dạng.",
+      "Nhấn Ctrl + B."
+    ],
+    result: "Văn bản được in đậm hoặc bỏ in đậm.",
+    tip: "B = Bold."
+  },
+
+  "Ctrl + I": {
+    description: "Bật hoặc tắt chữ in nghiêng.",
+    steps: [
+      "Chọn văn bản cần định dạng.",
+      "Nhấn Ctrl + I."
+    ],
+    result: "Văn bản được in nghiêng hoặc bỏ in nghiêng.",
+    tip: "I = Italic."
+  },
+
+  "Ctrl + U": {
+    description: "Bật hoặc tắt gạch chân.",
+    steps: [
+      "Chọn văn bản.",
+      "Nhấn Ctrl + U."
+    ],
+    result: "Văn bản được gạch chân hoặc bỏ gạch chân.",
+    tip: "U = Underline."
+  },
+
+  "Ctrl + D": {
+    description: "Mở hộp thoại Font.",
+    steps: [
+      "Chọn văn bản cần định dạng.",
+      "Nhấn Ctrl + D.",
+      "Thiết lập Font, Font Style, Size hoặc Effects.",
+      "Bấm OK."
+    ],
+    result: "Định dạng Font được áp dụng cho nội dung đã chọn."
+  },
+
+  "Ctrl + Shift + >": {
+    description: "Tăng cỡ chữ.",
+    steps: [
+      "Chọn văn bản.",
+      "Nhấn giữ Ctrl + Shift.",
+      "Nhấn phím >."
+    ],
+    result: "Kích thước chữ tăng lên."
+  },
+
+  "Ctrl + Shift + <": {
+    description: "Giảm cỡ chữ.",
+    steps: [
+      "Chọn văn bản.",
+      "Nhấn giữ Ctrl + Shift.",
+      "Nhấn phím <."
+    ],
+    result: "Kích thước chữ giảm xuống."
+  },
+
+  "Shift + F3": {
+    description: "Chuyển chữ thường, Viết Hoa hoặc CHỮ HOA.",
+    steps: [
+      "Chọn văn bản.",
+      "Nhấn Shift + F3.",
+      "Nhấn lặp lại để chuyển qua các kiểu chữ."
+    ],
+    result: "Kiểu viết hoa của nội dung được thay đổi.",
+    tip: "Rất hữu ích khi nhập sai kiểu chữ hoa/thường."
+  },
+
+  "Ctrl + L": {
+    description: "Căn trái đoạn văn.",
+    steps: [
+      "Đặt con trỏ trong đoạn hoặc chọn nhiều đoạn.",
+      "Nhấn Ctrl + L."
+    ],
+    result: "Đoạn văn được căn trái."
+  },
+
+  "Ctrl + E": {
+    description: "Căn giữa đoạn văn.",
+    steps: [
+      "Đặt con trỏ trong đoạn.",
+      "Nhấn Ctrl + E."
+    ],
+    result: "Đoạn văn được căn giữa.",
+    tip: "Thường dùng cho tiêu đề."
+  },
+
+  "Ctrl + R": {
+    description: "Căn phải đoạn văn.",
+    steps: [
+      "Đặt con trỏ trong đoạn.",
+      "Nhấn Ctrl + R."
+    ],
+    result: "Đoạn văn được căn về bên phải."
+  },
+
+  "Ctrl + J": {
+    description: "Căn đều hai lề.",
+    steps: [
+      "Chọn đoạn văn.",
+      "Nhấn Ctrl + J."
+    ],
+    result: "Văn bản được căn đều giữa lề trái và lề phải.",
+    tip: "Rất thường dùng trong báo cáo, luận văn và công văn."
+  },
+
+  "Home": {
+    description: "Di chuyển đến đầu dòng.",
+    steps: ["Nhấn phím Home."],
+    result: "Con trỏ chuyển đến đầu dòng hiện tại."
+  },
+
+  "End": {
+    description: "Di chuyển đến cuối dòng.",
+    steps: ["Nhấn phím End."],
+    result: "Con trỏ chuyển đến cuối dòng hiện tại."
+  },
+
+  "Ctrl + Home": {
+    description: "Di chuyển về đầu tài liệu.",
+    steps: [
+      "Nhấn giữ Ctrl.",
+      "Nhấn Home."
+    ],
+    result: "Con trỏ chuyển về đầu tài liệu."
+  },
+
+  "Ctrl + End": {
+    description: "Di chuyển đến cuối tài liệu.",
+    steps: [
+      "Nhấn giữ Ctrl.",
+      "Nhấn End."
+    ],
+    result: "Con trỏ chuyển đến cuối tài liệu."
+  },
+
+  "Ctrl + F": {
+    description: "Tìm kiếm nội dung.",
+    steps: [
+      "Nhấn Ctrl + F.",
+      "Nhập từ hoặc cụm từ cần tìm.",
+      "Chọn kết quả trong Navigation Pane."
+    ],
+    result: "Word xác định các vị trí chứa nội dung cần tìm.",
+    tip: "Trong Word, Ctrl + F cũng mở Navigation Pane."
+  },
+
+  "Ctrl + H": {
+    description: "Tìm và thay thế nội dung.",
+    steps: [
+      "Nhấn Ctrl + H.",
+      "Nhập nội dung vào Find what.",
+      "Nhập nội dung mới vào Replace with.",
+      "Chọn Replace hoặc Replace All."
+    ],
+    result: "Nội dung cũ được thay thế theo lựa chọn.",
+    tip: "Cẩn thận khi dùng Replace All trên tài liệu lớn."
+  },
+
+  "Ctrl + Backspace": {
+    description: "Xóa một từ phía trước con trỏ.",
+    steps: [
+      "Đặt con trỏ sau từ cần xóa.",
+      "Nhấn Ctrl + Backspace."
+    ],
+    result: "Một từ phía trước con trỏ bị xóa."
+  },
+
+  "Ctrl + Delete": {
+    description: "Xóa một từ phía sau con trỏ.",
+    steps: [
+      "Đặt con trỏ trước từ cần xóa.",
+      "Nhấn Ctrl + Delete."
+    ],
+    result: "Một từ phía sau con trỏ bị xóa."
+  },
+
+  "Ctrl + Space": {
+    description: "Xóa nhiều định dạng ký tự trực tiếp.",
+    steps: [
+      "Chọn văn bản.",
+      "Nhấn Ctrl + Space."
+    ],
+    result: "Nhiều định dạng trực tiếp như font, màu hoặc style thủ công được loại bỏ.",
+    tip: "Rất hữu ích với nội dung copy từ Internet."
+  },
+
+  "Ctrl + 1": {
+    description: "Đặt dãn dòng 1.0.",
+    steps: [
+      "Chọn đoạn văn.",
+      "Nhấn Ctrl + 1."
+    ],
+    result: "Line Spacing được đặt về 1.0."
+  },
+
+  "Ctrl + 2": {
+    description: "Đặt dãn dòng 2.0.",
+    steps: [
+      "Chọn đoạn văn.",
+      "Nhấn Ctrl + 2."
+    ],
+    result: "Line Spacing được đặt thành 2.0."
+  },
+
+  "Ctrl + 5": {
+    description: "Đặt dãn dòng 1.5.",
+    steps: [
+      "Chọn đoạn văn.",
+      "Nhấn Ctrl + 5."
+    ],
+    result: "Line Spacing được đặt thành 1.5."
+  },
+
+  "Ctrl + Enter": {
+    description: "Chèn Page Break.",
+    steps: [
+      "Đặt con trỏ tại vị trí cần sang trang.",
+      "Nhấn Ctrl + Enter."
+    ],
+    result: "Nội dung phía sau được chuyển sang trang mới.",
+    tip: "Không nên nhấn Enter nhiều lần để sang trang."
+  },
+
+  "Ctrl + Shift + Enter": {
+    description: "Chèn Column Break.",
+    steps: [
+      "Đặt con trỏ tại vị trí cần ngắt cột.",
+      "Nhấn Ctrl + Shift + Enter."
+    ],
+    result: "Nội dung tiếp theo chuyển sang cột mới."
+  },
+
+  "Ctrl + G": {
+    description: "Mở Go To.",
+    steps: [
+      "Nhấn Ctrl + G.",
+      "Chọn loại vị trí cần đến.",
+      "Nhập số trang hoặc thông tin tương ứng."
+    ],
+    result: "Word chuyển nhanh đến vị trí được chỉ định."
+  },
+
+  "Ctrl + K": {
+    description: "Chèn Hyperlink.",
+    steps: [
+      "Chọn văn bản hoặc đối tượng.",
+      "Nhấn Ctrl + K.",
+      "Nhập địa chỉ liên kết.",
+      "Bấm OK."
+    ],
+    result: "Hyperlink được chèn."
+  },
+
+  "Ctrl + M": {
+    description: "Tăng thụt lề đoạn văn.",
+    steps: [
+      "Đặt con trỏ trong đoạn.",
+      "Nhấn Ctrl + M."
+    ],
+    result: "Đoạn văn được thụt vào thêm."
+  },
+
+  "Ctrl + Shift + M": {
+    description: "Giảm thụt lề đoạn văn.",
+    steps: [
+      "Đặt con trỏ trong đoạn.",
+      "Nhấn Ctrl + Shift + M."
+    ],
+    result: "Mức thụt lề đoạn văn giảm."
+  },
+
+  "Ctrl + T": {
+    description: "Tạo Hanging Indent.",
+    steps: [
+      "Đặt con trỏ trong đoạn.",
+      "Nhấn Ctrl + T."
+    ],
+    result: "Đoạn văn được áp dụng Hanging Indent."
+  },
+
+  "Ctrl + Shift + T": {
+    description: "Giảm Hanging Indent.",
+    steps: [
+      "Đặt con trỏ trong đoạn.",
+      "Nhấn Ctrl + Shift + T."
+    ],
+    result: "Mức Hanging Indent giảm."
+  },
+
+  "Ctrl + Q": {
+    description: "Xóa định dạng Paragraph trực tiếp.",
+    steps: [
+      "Đặt con trỏ trong đoạn.",
+      "Nhấn Ctrl + Q."
+    ],
+    result: "Các định dạng Paragraph trực tiếp được loại bỏ."
+  },
+
+  "Ctrl + Shift + L": {
+    description: "Tạo Bullet List.",
+    steps: [
+      "Chọn các dòng cần tạo danh sách.",
+      "Nhấn Ctrl + Shift + L."
+    ],
+    result: "Danh sách Bullet được tạo."
+  },
+
+  "Ctrl + Shift + 8": {
+    description: "Hiện hoặc ẩn Formatting Marks.",
+    steps: [
+      "Nhấn Ctrl + Shift + 8."
+    ],
+    result: "Các ký tự định dạng như ¶, Tab, Space, Break được hiện hoặc ẩn.",
+    tip: "Đây là phím rất hữu ích khi kiểm tra lỗi bố cục."
+  },
+
+  "F4": {
+    description: "Lặp lại thao tác gần nhất.",
+    steps: [
+      "Thực hiện một thao tác định dạng.",
+      "Chọn vị trí hoặc nội dung khác.",
+      "Nhấn F4."
+    ],
+    result: "Word lặp lại thao tác trước đó."
+  },
+
+  "F7": {
+    description: "Kiểm tra chính tả và ngữ pháp.",
+    steps: ["Nhấn F7."],
+    result: "Word mở công cụ kiểm tra chính tả/ngữ pháp."
+  },
+
+  "Ctrl + F2": {
+    description: "Mở Print Preview.",
+    steps: ["Nhấn Ctrl + F2."],
+    result: "Word hiển thị chế độ xem trước khi in."
+  },
+
+  "Alt + Ctrl + F": {
+    description: "Chèn Footnote.",
+    steps: [
+      "Đặt con trỏ sau nội dung cần chú thích.",
+      "Nhấn Alt + Ctrl + F."
+    ],
+    result: "Một Footnote mới được tạo ở cuối trang."
+  },
+
+  "Alt + Ctrl + D": {
+    description: "Chèn Endnote.",
+    steps: [
+      "Đặt con trỏ sau nội dung cần chú thích.",
+      "Nhấn Alt + Ctrl + D."
+    ],
+    result: "Một Endnote được tạo."
+  }
+};
+
+
+function splitShortcutKeys(combo: string): string[] {
+  return combo
+    .split(" + ")
+    .map((key) => key.trim())
+    .filter(Boolean);
+}
+
+
+function renderShortcutKeys(combo: string): string {
+  const keys = splitShortcutKeys(combo);
+
+  return `
+    <div class="gt-key-combination">
+      ${keys
+        .map(
+          (key, index) => `
+            ${index > 0 ? `<span class="gt-key-plus">+</span>` : ""}
+            <kbd class="gt-key">${key}</kbd>
+          `
+        )
+        .join("")}
+    </div>
+  `;
+}
+
+
+function createDefaultSteps(combo: string): string[] {
+  const keys = splitShortcutKeys(combo);
+
+  if (keys.length === 1) {
+    return [`Nhấn phím <strong>${keys[0]}</strong>.`];
+  }
+
+  const finalKey = keys[keys.length - 1];
+  const holdingKeys = keys.slice(0, -1);
+
+  return [
+    `Nhấn giữ ${holdingKeys
+      .map((key) => `<strong>${key}</strong>`)
+      .join(" + ")}.`,
+    `Trong khi vẫn giữ phím trên, nhấn <strong>${finalKey}</strong>.`
+  ];
+}
+
+
+function shortcut(
+  combo: string,
+  title: string,
+  extra?: ShortcutDetail
+): string {
+  const base = SHORTCUT_DETAILS[combo] || {};
+
+  const detail: ShortcutDetail = {
+    ...base,
+    ...extra
+  };
+
+  const steps =
+    detail.steps && detail.steps.length > 0
+      ? detail.steps
+      : createDefaultSteps(combo);
+
+  return `
+    <details class="gt-shortcut-card">
+
+      <summary class="gt-shortcut-summary">
+
+        <div class="gt-shortcut-main">
+
+          ${renderShortcutKeys(combo)}
+
+          <div class="gt-shortcut-text">
+            <strong class="gt-shortcut-name">${title}</strong>
+
+            ${
+              detail.description
+                ? `
+                  <span class="gt-shortcut-description">
+                    ${detail.description}
+                  </span>
+                `
+                : ""
+            }
+          </div>
+
+        </div>
+
+        <span class="gt-shortcut-chevron">›</span>
+
+      </summary>
+
+
+      <div class="gt-shortcut-body">
+
+        <div class="gt-shortcut-section">
+
+          <div class="gt-shortcut-section-title">
+            CÁCH THAO TÁC
+          </div>
+
+          <ol class="gt-shortcut-steps">
+
+            ${steps
+              .map(
+                (step, index) => `
+                  <li>
+                    <span class="gt-step-number">
+                      ${index + 1}
+                    </span>
+
+                    <span class="gt-step-text">
+                      ${step}
+                    </span>
+                  </li>
+                `
+              )
+              .join("")}
+
+          </ol>
+
+        </div>
+
+
+        ${
+          detail.result
+            ? `
+              <div class="gt-shortcut-result">
+
+                <span class="gt-result-icon">✓</span>
+
+                <div>
+                  <strong>Kết quả</strong>
+                  <p>${detail.result}</p>
+                </div>
+
+              </div>
+            `
+            : ""
+        }
+
+
+        ${
+          detail.tip
+            ? `
+              <div class="gt-shortcut-tip">
+
+                <span class="gt-tip-icon">💡</span>
+
+                <div>
+                  <strong>Mẹo</strong>
+                  <p>${detail.tip}</p>
+                </div>
+
+              </div>
+            `
+            : ""
+        }
+
+      </div>
+
+    </details>
+  `;
+}
+
+
+function shortcutGroup(
+  title: string,
+  items: string
+): string {
+  return `
+    <section class="gt-shortcut-group">
+
+      <div class="gt-shortcut-group-title">
+        ${title}
+      </div>
+
+      <div class="gt-shortcut-list">
+        ${items}
+      </div>
+
+    </section>
+  `;
+}
+
+
+// =========================================================
+// TYPES
+// =========================================================
+
 export type LessonLevel =
   | "CƠ BẢN"
   | "TRUNG CẤP"
@@ -21,6 +708,11 @@ export interface Lesson {
   keywords: string[];
   sections: LessonSection[];
 }
+
+
+// =========================================================
+// LESSONS
+// =========================================================
 
 export const lessons: Lesson[] = [
 
@@ -51,8 +743,10 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "1.1. Microsoft Word là gì?",
+
         content: `
           <p>
             Microsoft Word là phần mềm xử lý văn bản thuộc bộ
@@ -74,8 +768,10 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "1.2. Giao diện Microsoft Word",
+
         content: `
           <ul>
             <li><strong>Quick Access Toolbar:</strong> Save, Undo, Redo.</li>
@@ -88,35 +784,41 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "1.3. Tạo tài liệu mới",
+
         content: `
           <p>File → New → Blank Document.</p>
 
-          <div class="shortcut">
-            <kbd>Ctrl + N</kbd>
-            <span>Tạo tài liệu Word mới.</span>
-          </div>
+          ${shortcut(
+            "Ctrl + N",
+            "Tạo tài liệu Word mới"
+          )}
         `
       },
+
 
       {
         title: "1.4. Mở tài liệu",
+
         content: `
-          <div class="shortcut">
-            <kbd>Ctrl + O</kbd>
-            <span>Mở tài liệu.</span>
-          </div>
+          ${shortcut(
+            "Ctrl + O",
+            "Mở tài liệu"
+          )}
         `
       },
 
+
       {
         title: "1.5. Lưu tài liệu",
+
         content: `
-          <div class="shortcut">
-            <kbd>Ctrl + S</kbd>
-            <span>Lưu tài liệu.</span>
-          </div>
+          ${shortcut(
+            "Ctrl + S",
+            "Lưu tài liệu"
+          )}
 
           <div class="note">
             Nên thường xuyên sử dụng Ctrl + S trong quá trình làm việc.
@@ -124,19 +826,23 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "1.6. Save và Save As",
+
         content: `
           <p>
-            <strong>Save:</strong> Lưu thay đổi vào file hiện tại.
+            <strong>Save:</strong>
+            Lưu thay đổi vào file hiện tại.
           </p>
 
           <p>
-            <strong>Save As:</strong> Tạo bản sao hoặc lưu sang tên,
-            thư mục hoặc định dạng khác.
+            <strong>Save As:</strong>
+            Tạo bản sao hoặc lưu sang tên, thư mục hoặc định dạng khác.
           </p>
         `
       }
+
     ]
   },
 
@@ -168,80 +874,92 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "2.1. Copy – Cut – Paste",
-        content: `
-        <div class="shortcut-item">
 
-          <div class="shortcut">
-            <kbd>Ctrl + A</kbd>
-            <span>Chọn tất cả.</span>
-          </div>
+        content: shortcutGroup(
+          "Sao chép · Cắt · Dán · Hoàn tác",
 
-          <figure class="shortcut-illustration">
-
-            <img
-              src="/assets/lessons/keyboard/ctrl-a.png"
-              alt="Minh họa phím Ctrl và A trên bàn phím"
-              loading="lazy"
-            />
-
-            <figcaption>
-              Nhấn giữ <strong>Ctrl</strong>, sau đó nhấn <strong>A</strong>.
-            </figcaption>
-
-          </figure>
-
-        </div>
-          <div class="shortcut"><kbd>Ctrl + C</kbd><span>Sao chép.</span></div>
-          <div class="shortcut"><kbd>Ctrl + X</kbd><span>Cắt.</span></div>
-          <div class="shortcut"><kbd>Ctrl + V</kbd><span>Dán.</span></div>
-          <div class="shortcut"><kbd>Ctrl + Z</kbd><span>Hoàn tác.</span></div>
-          <div class="shortcut"><kbd>Ctrl + Y</kbd><span>Làm lại.</span></div>
-        `
+          `
+            ${shortcut("Ctrl + A", "Chọn tất cả")}
+            ${shortcut("Ctrl + C", "Sao chép")}
+            ${shortcut("Ctrl + X", "Cắt")}
+            ${shortcut("Ctrl + V", "Dán")}
+            ${shortcut("Ctrl + Z", "Hoàn tác")}
+            ${shortcut("Ctrl + Y", "Làm lại")}
+          `
+        )
       },
+
 
       {
         title: "2.7. Quản lý file",
-        content: `
-          <div class="shortcut"><kbd>Ctrl + N</kbd><span>Tạo tài liệu mới.</span></div>
-          <div class="shortcut"><kbd>Ctrl + O</kbd><span>Mở tài liệu.</span></div>
-          <div class="shortcut"><kbd>Ctrl + S</kbd><span>Lưu.</span></div>
-          <div class="shortcut"><kbd>Ctrl + P</kbd><span>In.</span></div>
-          <div class="shortcut"><kbd>Ctrl + W</kbd><span>Đóng tài liệu.</span></div>
-        `
+
+        content: shortcutGroup(
+          "Quản lý tài liệu",
+
+          `
+            ${shortcut("Ctrl + N", "Tạo tài liệu mới")}
+            ${shortcut("Ctrl + O", "Mở tài liệu")}
+            ${shortcut("Ctrl + S", "Lưu tài liệu")}
+            ${shortcut("Ctrl + P", "In tài liệu")}
+            ${shortcut("Ctrl + W", "Đóng tài liệu")}
+          `
+        )
       },
+
 
       {
         title: "2.8. Định dạng chữ",
-        content: `
-          <div class="shortcut"><kbd>Ctrl + B</kbd><span>In đậm.</span></div>
-          <div class="shortcut"><kbd>Ctrl + I</kbd><span>In nghiêng.</span></div>
-          <div class="shortcut"><kbd>Ctrl + U</kbd><span>Gạch chân.</span></div>
-          <div class="shortcut"><kbd>Ctrl + D</kbd><span>Mở Font Dialog.</span></div>
-          <div class="shortcut"><kbd>Shift + F3</kbd><span>Đổi HOA/thường.</span></div>
-        `
+
+        content: shortcutGroup(
+          "Định dạng văn bản",
+
+          `
+            ${shortcut("Ctrl + B", "In đậm")}
+            ${shortcut("Ctrl + I", "In nghiêng")}
+            ${shortcut("Ctrl + U", "Gạch chân")}
+            ${shortcut("Ctrl + D", "Mở Font Dialog")}
+            ${shortcut("Ctrl + Shift + >", "Tăng cỡ chữ")}
+            ${shortcut("Ctrl + Shift + <", "Giảm cỡ chữ")}
+            ${shortcut("Shift + F3", "Đổi HOA/thường")}
+          `
+        )
       },
+
 
       {
         title: "2.9. Căn lề",
-        content: `
-          <div class="shortcut"><kbd>Ctrl + L</kbd><span>Căn trái.</span></div>
-          <div class="shortcut"><kbd>Ctrl + E</kbd><span>Căn giữa.</span></div>
-          <div class="shortcut"><kbd>Ctrl + R</kbd><span>Căn phải.</span></div>
-          <div class="shortcut"><kbd>Ctrl + J</kbd><span>Căn đều hai bên.</span></div>
-        `
+
+        content: shortcutGroup(
+          "Căn chỉnh đoạn văn",
+
+          `
+            ${shortcut("Ctrl + L", "Căn trái")}
+            ${shortcut("Ctrl + E", "Căn giữa")}
+            ${shortcut("Ctrl + R", "Căn phải")}
+            ${shortcut("Ctrl + J", "Căn đều hai bên")}
+          `
+        )
       },
+
 
       {
         title: "2.10. Di chuyển con trỏ",
-        content: `
-          <div class="shortcut"><kbd>Home</kbd><span>Đầu dòng.</span></div>
-          <div class="shortcut"><kbd>End</kbd><span>Cuối dòng.</span></div>
-          <div class="shortcut"><kbd>Ctrl + Home</kbd><span>Đầu tài liệu.</span></div>
-          <div class="shortcut"><kbd>Ctrl + End</kbd><span>Cuối tài liệu.</span></div>
-        `
+
+        content: shortcutGroup(
+          "Điều hướng trong tài liệu",
+
+          `
+            ${shortcut("Home", "Đầu dòng")}
+            ${shortcut("End", "Cuối dòng")}
+            ${shortcut("Ctrl + Home", "Đầu tài liệu")}
+            ${shortcut("Ctrl + End", "Cuối tài liệu")}
+          `
+        )
       }
+
     ]
   },
 
@@ -271,11 +989,20 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "3.1. Enter và Shift + Enter",
+
         content: `
-          <p><strong>Enter:</strong> Tạo đoạn văn mới.</p>
-          <p><strong>Shift + Enter:</strong> Xuống dòng trong cùng đoạn.</p>
+          <p>
+            <strong>Enter:</strong>
+            Tạo đoạn văn mới.
+          </p>
+
+          <p>
+            <strong>Shift + Enter:</strong>
+            Xuống dòng trong cùng đoạn.
+          </p>
 
           <div class="warning">
             Không nên nhấn Enter liên tục để tạo khoảng cách.
@@ -284,41 +1011,69 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "3.2. Xóa văn bản",
+
         content: `
+          <p>
+            Word hỗ trợ nhiều mức xóa khác nhau:
+          </p>
+
           <ul>
-            <li>Backspace: Xóa ký tự phía trước.</li>
-            <li>Delete: Xóa ký tự phía sau.</li>
-            <li>Ctrl + Backspace: Xóa từ phía trước.</li>
-            <li>Ctrl + Delete: Xóa từ phía sau.</li>
+            <li>
+              <strong>Backspace:</strong>
+              Xóa ký tự phía trước.
+            </li>
+
+            <li>
+              <strong>Delete:</strong>
+              Xóa ký tự phía sau.
+            </li>
           </ul>
+
+          ${shortcut(
+            "Ctrl + Backspace",
+            "Xóa một từ phía trước"
+          )}
+
+          ${shortcut(
+            "Ctrl + Delete",
+            "Xóa một từ phía sau"
+          )}
         `
       },
+
 
       {
         title: "3.3. Find",
+
         content: `
-          <div class="shortcut">
-            <kbd>Ctrl + F</kbd>
-            <span>Tìm kiếm nội dung trong tài liệu.</span>
-          </div>
+          ${shortcut(
+            "Ctrl + F",
+            "Tìm kiếm nội dung"
+          )}
         `
       },
 
+
       {
         title: "3.4. Replace",
+
         content: `
-          <div class="shortcut">
-            <kbd>Ctrl + H</kbd>
-            <span>Tìm và thay thế nội dung.</span>
-          </div>
+          ${shortcut(
+            "Ctrl + H",
+            "Tìm và thay thế"
+          )}
 
           <p>
-            Có thể sử dụng Replace All để thay thế tất cả kết quả.
+            Có thể sử dụng
+            <strong>Replace All</strong>
+            để thay thế tất cả kết quả.
           </p>
         `
       }
+
     ]
   },
 
@@ -347,8 +1102,10 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "4.1. Font",
+
         content: `
           <p>Các font thường gặp:</p>
 
@@ -361,46 +1118,74 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "4.2. Font Size",
+
         content: `
           <table>
-            <tr><th>Nội dung</th><th>Cỡ tham khảo</th></tr>
-            <tr><td>Nội dung</td><td>12–14</td></tr>
-            <tr><td>Tiêu đề nhỏ</td><td>14–16</td></tr>
-            <tr><td>Tiêu đề lớn</td><td>18–24</td></tr>
+            <tr>
+              <th>Nội dung</th>
+              <th>Cỡ tham khảo</th>
+            </tr>
+
+            <tr>
+              <td>Nội dung</td>
+              <td>12–14</td>
+            </tr>
+
+            <tr>
+              <td>Tiêu đề nhỏ</td>
+              <td>14–16</td>
+            </tr>
+
+            <tr>
+              <td>Tiêu đề lớn</td>
+              <td>18–24</td>
+            </tr>
           </table>
         `
       },
 
+
       {
         title: "4.3. Bold – Italic – Underline",
-        content: `
-          <div class="shortcut"><kbd>Ctrl + B</kbd><span>In đậm.</span></div>
-          <div class="shortcut"><kbd>Ctrl + I</kbd><span>In nghiêng.</span></div>
-          <div class="shortcut"><kbd>Ctrl + U</kbd><span>Gạch chân.</span></div>
-        `
+
+        content: shortcutGroup(
+          "Định dạng nhanh",
+
+          `
+            ${shortcut("Ctrl + B", "In đậm")}
+            ${shortcut("Ctrl + I", "In nghiêng")}
+            ${shortcut("Ctrl + U", "Gạch chân")}
+          `
+        )
       },
+
 
       {
         title: "4.6. Change Case",
+
         content: `
-          <div class="shortcut">
-            <kbd>Shift + F3</kbd>
-            <span>Chuyển chữ thường / Viết Hoa / CHỮ HOA.</span>
-          </div>
+          ${shortcut(
+            "Shift + F3",
+            "Đổi HOA / thường"
+          )}
         `
       },
 
+
       {
         title: "4.7. Clear Formatting",
+
         content: `
-          <div class="shortcut">
-            <kbd>Ctrl + Space</kbd>
-            <span>Loại bỏ nhiều định dạng ký tự trực tiếp.</span>
-          </div>
+          ${shortcut(
+            "Ctrl + Space",
+            "Xóa định dạng ký tự"
+          )}
         `
       }
+
     ]
   },
 
@@ -429,36 +1214,55 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "5.1. Alignment",
-        content: `
-          <div class="shortcut"><kbd>Ctrl + L</kbd><span>Căn trái.</span></div>
-          <div class="shortcut"><kbd>Ctrl + E</kbd><span>Căn giữa.</span></div>
-          <div class="shortcut"><kbd>Ctrl + R</kbd><span>Căn phải.</span></div>
-          <div class="shortcut"><kbd>Ctrl + J</kbd><span>Căn đều.</span></div>
-        `
+
+        content: shortcutGroup(
+          "Căn chỉnh",
+
+          `
+            ${shortcut("Ctrl + L", "Căn trái")}
+            ${shortcut("Ctrl + E", "Căn giữa")}
+            ${shortcut("Ctrl + R", "Căn phải")}
+            ${shortcut("Ctrl + J", "Căn đều")}
+          `
+        )
       },
+
 
       {
         title: "5.2. Line Spacing",
-        content: `
-          <div class="shortcut"><kbd>Ctrl + 1</kbd><span>Dãn dòng 1.</span></div>
-          <div class="shortcut"><kbd>Ctrl + 2</kbd><span>Dãn dòng 2.</span></div>
-          <div class="shortcut"><kbd>Ctrl + 5</kbd><span>Dãn dòng 1.5.</span></div>
-        `
+
+        content: shortcutGroup(
+          "Dãn dòng",
+
+          `
+            ${shortcut("Ctrl + 1", "Dãn dòng 1.0")}
+            ${shortcut("Ctrl + 2", "Dãn dòng 2.0")}
+            ${shortcut("Ctrl + 5", "Dãn dòng 1.5")}
+          `
+        )
       },
+
 
       {
         title: "5.3. Paragraph Spacing",
+
         content: `
           <p>
-            Khoảng cách giữa các đoạn gồm Before và After.
+            Khoảng cách giữa các đoạn gồm
+            <strong>Before</strong>
+            và
+            <strong>After</strong>.
           </p>
         `
       },
 
+
       {
         title: "5.4. Indent",
+
         content: `
           <ul>
             <li>Left Indent.</li>
@@ -468,6 +1272,7 @@ export const lessons: Lesson[] = [
           </ul>
         `
       }
+
     ]
   },
 
@@ -493,8 +1298,10 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "6.1. Bullets",
+
         content: `
           <p>
             Bullets dùng cho danh sách không cần thứ tự.
@@ -502,8 +1309,10 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "6.2. Numbering",
+
         content: `
           <p>
             Numbering dùng khi thứ tự các bước có ý nghĩa.
@@ -511,12 +1320,14 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "6.3. Multilevel List",
+
         content: `
           <p>
             Dùng để tạo cấu trúc:
-            1 → 1.1 → 1.1.1...
+            <strong>1 → 1.1 → 1.1.1...</strong>
           </p>
 
           <div class="note">
@@ -524,6 +1335,7 @@ export const lessons: Lesson[] = [
           </div>
         `
       }
+
     ]
   },
 
@@ -551,8 +1363,10 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "7.1. Không sử dụng Space để căn chỉnh",
+
         content: `
           <div class="warning">
             Không nên nhấn Space nhiều lần để căn nội dung.
@@ -564,8 +1378,10 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "7.2. Các loại Tab",
+
         content: `
           <ul>
             <li>Left Tab.</li>
@@ -575,6 +1391,7 @@ export const lessons: Lesson[] = [
           </ul>
         `
       }
+
     ]
   },
 
@@ -603,8 +1420,10 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "8.1. Margins",
+
         content: `
           <p>
             Layout → Margins.
@@ -616,41 +1435,59 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "8.2. Orientation",
+
         content: `
           <ul>
-            <li>Portrait: Trang dọc.</li>
-            <li>Landscape: Trang ngang.</li>
+            <li>
+              <strong>Portrait:</strong>
+              Trang dọc.
+            </li>
+
+            <li>
+              <strong>Landscape:</strong>
+              Trang ngang.
+            </li>
           </ul>
         `
       },
 
+
       {
         title: "8.3. Size",
+
         content: `
-          <p>Khổ giấy thông dụng nhất là A4.</p>
+          <p>
+            Khổ giấy thông dụng nhất là A4.
+          </p>
         `
       },
+
 
       {
         title: "8.4. Page Break",
+
         content: `
-          <div class="shortcut">
-            <kbd>Ctrl + Enter</kbd>
-            <span>Chuyển sang trang mới đúng cách.</span>
-          </div>
+          ${shortcut(
+            "Ctrl + Enter",
+            "Chèn Page Break"
+          )}
         `
       },
 
+
       {
         title: "8.5. Section Break",
+
         content: `
           <p>
             Section Break chia tài liệu thành nhiều khu vực độc lập.
           </p>
         `
       }
+
     ]
   },
 
@@ -677,15 +1514,21 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "9.1. Tạo bảng",
+
         content: `
-          <p>Insert → Table.</p>
+          <p>
+            Insert → Table.
+          </p>
         `
       },
 
+
       {
         title: "9.2. Các thao tác quan trọng",
+
         content: `
           <ul>
             <li>Insert Row.</li>
@@ -701,8 +1544,10 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "9.5. AutoFit",
+
         content: `
           <ul>
             <li>AutoFit Contents.</li>
@@ -711,6 +1556,7 @@ export const lessons: Lesson[] = [
           </ul>
         `
       }
+
     ]
   },
 
@@ -738,15 +1584,21 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "10.1. Insert Pictures",
+
         content: `
-          <p>Insert → Pictures.</p>
+          <p>
+            Insert → Pictures.
+          </p>
         `
       },
 
+
       {
         title: "10.2. Resize",
+
         content: `
           <p>
             Nên kéo từ các điểm ở góc ảnh để tránh làm ảnh bị méo.
@@ -754,8 +1606,10 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "10.3. Wrap Text",
+
         content: `
           <ul>
             <li>In Line with Text.</li>
@@ -771,12 +1625,17 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "10.4. Crop",
+
         content: `
-          <p>Crop dùng để cắt phần thừa của ảnh.</p>
+          <p>
+            Crop dùng để cắt phần thừa của ảnh.
+          </p>
         `
       }
+
     ]
   },
 
@@ -803,8 +1662,10 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "11.1. Shapes",
+
         content: `
           <p>
             Có thể sử dụng Rectangle, Circle, Arrow, Line và Flowchart.
@@ -812,8 +1673,10 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "11.2. Text Box",
+
         content: `
           <p>
             Text Box là hộp văn bản có thể di chuyển tự do.
@@ -821,14 +1684,17 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "11.3. SmartArt",
+
         content: `
           <p>
             SmartArt giúp tạo sơ đồ và quy trình nhanh chóng.
           </p>
         `
       }
+
     ]
   },
 
@@ -854,8 +1720,10 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "12.1. Header",
+
         content: `
           <p>
             Nội dung xuất hiện ở đầu trang.
@@ -863,8 +1731,10 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "12.2. Footer",
+
         content: `
           <p>
             Nội dung xuất hiện ở cuối trang.
@@ -872,21 +1742,28 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "12.3. Page Number",
+
         content: `
-          <p>Insert → Page Number.</p>
+          <p>
+            Insert → Page Number.
+          </p>
         `
       },
 
+
       {
         title: "12.4. Different First Page",
+
         content: `
           <p>
             Dùng khi không muốn trang đầu hiển thị Header/Footer.
           </p>
         `
       }
+
     ]
   },
 
@@ -913,8 +1790,10 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "13.1. Style là gì?",
+
         content: `
           <p>
             Style là tập hợp các định dạng có sẵn:
@@ -923,8 +1802,10 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "13.2. Vì sao phải dùng Heading?",
+
         content: `
           <p>
             Heading giúp Word hiểu cấu trúc tài liệu.
@@ -938,6 +1819,7 @@ export const lessons: Lesson[] = [
           </ul>
         `
       }
+
     ]
   },
 
@@ -963,8 +1845,10 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "14.1. Điều kiện",
+
         content: `
           <p>
             Tiêu đề cần sử dụng Heading 1, Heading 2, Heading 3...
@@ -972,8 +1856,10 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "14.2. Chèn mục lục",
+
         content: `
           <p>
             References → Table of Contents.
@@ -981,8 +1867,10 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "14.3. Cập nhật mục lục",
+
         content: `
           <ul>
             <li>Update page numbers only.</li>
@@ -994,6 +1882,7 @@ export const lessons: Lesson[] = [
           </div>
         `
       }
+
     ]
   },
 
@@ -1019,8 +1908,10 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "Caption là gì?",
+
         content: `
           <p>
             Caption dùng để đánh số hình ảnh và bảng.
@@ -1032,15 +1923,18 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "Tại sao không nên tự gõ số hình?",
+
         content: `
           <p>
-            Nếu chèn thêm hình ở giữa, Caption có thể giúp Word
-            quản lý lại số thứ tự.
+            Nếu chèn thêm hình ở giữa,
+            Caption có thể giúp Word quản lý lại số thứ tự.
           </p>
         `
       }
+
     ]
   },
 
@@ -1065,8 +1959,10 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "Cross-reference",
+
         content: `
           <p>
             Có thể tham chiếu đến Heading, Hình, Bảng và Bookmark.
@@ -1077,6 +1973,7 @@ export const lessons: Lesson[] = [
           </div>
         `
       }
+
     ]
   },
 
@@ -1101,8 +1998,10 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "17.1. Footnote",
+
         content: `
           <p>
             Footnote là ghi chú nằm ở cuối trang.
@@ -1110,14 +2009,17 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "17.2. Endnote",
+
         content: `
           <p>
             Endnote tập trung ghi chú ở cuối tài liệu hoặc cuối phần.
           </p>
         `
       }
+
     ]
   },
 
@@ -1143,18 +2045,24 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "Find & Replace nâng cao",
+
         content: `
-          <p>
-            Ctrl + H → More → Format.
-          </p>
+          ${shortcut(
+            "Ctrl + H",
+            "Mở Find & Replace"
+          )}
 
           <p>
-            Có thể tìm theo Font, Bold, Paragraph hoặc ký tự đặc biệt.
+            Chọn
+            <strong>More → Format</strong>
+            để tìm theo Font, Bold, Paragraph hoặc các thuộc tính khác.
           </p>
         `
       }
+
     ]
   },
 
@@ -1183,23 +2091,42 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "Phím tắt nâng cao",
-        content: `
-          <div class="shortcut"><kbd>Ctrl + Enter</kbd><span>Page Break.</span></div>
-          <div class="shortcut"><kbd>Ctrl + Shift + Enter</kbd><span>Column Break.</span></div>
-          <div class="shortcut"><kbd>Ctrl + F</kbd><span>Find.</span></div>
-          <div class="shortcut"><kbd>Ctrl + H</kbd><span>Replace.</span></div>
-          <div class="shortcut"><kbd>Ctrl + G</kbd><span>Go To.</span></div>
-          <div class="shortcut"><kbd>Ctrl + K</kbd><span>Hyperlink.</span></div>
-          <div class="shortcut"><kbd>Ctrl + D</kbd><span>Font Dialog.</span></div>
-          <div class="shortcut"><kbd>Ctrl + M</kbd><span>Tăng Indent.</span></div>
-          <div class="shortcut"><kbd>Ctrl + T</kbd><span>Hanging Indent.</span></div>
-          <div class="shortcut"><kbd>Ctrl + Q</kbd><span>Xóa định dạng Paragraph.</span></div>
-          <div class="shortcut"><kbd>F4</kbd><span>Lặp thao tác.</span></div>
-          <div class="shortcut"><kbd>F7</kbd><span>Kiểm tra chính tả.</span></div>
-        `
+
+        content: shortcutGroup(
+          "Bộ phím chuyên nghiệp",
+
+          `
+            ${shortcut("Ctrl + Enter", "Page Break")}
+            ${shortcut("Ctrl + Shift + Enter", "Column Break")}
+            ${shortcut("Ctrl + F", "Find")}
+            ${shortcut("Ctrl + H", "Replace")}
+            ${shortcut("Ctrl + G", "Go To")}
+            ${shortcut("Ctrl + K", "Hyperlink")}
+            ${shortcut("Ctrl + D", "Font Dialog")}
+            ${shortcut("Ctrl + M", "Tăng Indent")}
+            ${shortcut("Ctrl + Shift + M", "Giảm Indent")}
+            ${shortcut("Ctrl + T", "Hanging Indent")}
+            ${shortcut("Ctrl + Shift + T", "Giảm Hanging Indent")}
+            ${shortcut("Ctrl + Shift + L", "Bullet List")}
+            ${shortcut("Ctrl + 1", "Line Spacing 1")}
+            ${shortcut("Ctrl + 2", "Line Spacing 2")}
+            ${shortcut("Ctrl + 5", "Line Spacing 1.5")}
+            ${shortcut("Ctrl + Space", "Xóa định dạng ký tự")}
+            ${shortcut("Ctrl + Q", "Xóa định dạng Paragraph")}
+            ${shortcut("Shift + F3", "Change Case")}
+            ${shortcut("F4", "Lặp thao tác gần nhất")}
+            ${shortcut("F7", "Kiểm tra chính tả")}
+            ${shortcut("Ctrl + F2", "Print Preview")}
+            ${shortcut("Ctrl + P", "Print")}
+            ${shortcut("Alt + Ctrl + F", "Footnote")}
+            ${shortcut("Alt + Ctrl + D", "Endnote")}
+          `
+        )
       }
+
     ]
   },
 
@@ -1226,15 +2153,21 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "20.1. Comments",
+
         content: `
-          <p>Review → New Comment.</p>
+          <p>
+            Review → New Comment.
+          </p>
         `
       },
 
+
       {
         title: "20.2. Track Changes",
+
         content: `
           <p>
             Theo dõi các chỉnh sửa được thực hiện trên tài liệu.
@@ -1242,14 +2175,17 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "20.3. Accept / Reject",
+
         content: `
           <p>
             Chấp nhận hoặc từ chối các thay đổi được ghi nhận.
           </p>
         `
       }
+
     ]
   },
 
@@ -1274,10 +2210,14 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "Protect Document",
+
         content: `
-          <p>Review → Restrict Editing.</p>
+          <p>
+            Review → Restrict Editing.
+          </p>
 
           <ul>
             <li>Chỉ cho đọc.</li>
@@ -1286,6 +2226,7 @@ export const lessons: Lesson[] = [
           </ul>
         `
       }
+
     ]
   },
 
@@ -1311,18 +2252,22 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "Mail Merge là gì?",
+
         content: `
           <p>
-            Mail Merge dùng để tạo hàng loạt tài liệu từ một mẫu
-            và nguồn dữ liệu.
+            Mail Merge dùng để tạo hàng loạt tài liệu
+            từ một mẫu và nguồn dữ liệu.
           </p>
         `
       },
 
+
       {
         title: "Quy trình",
+
         content: `
           <ol>
             <li>Chuẩn bị dữ liệu Excel.</li>
@@ -1334,6 +2279,7 @@ export const lessons: Lesson[] = [
           </ol>
         `
       }
+
     ]
   },
 
@@ -1359,20 +2305,23 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "Navigation Pane",
+
         content: `
-          <div class="shortcut">
-            <kbd>Ctrl + F</kbd>
-            <span>Mở Navigation Pane.</span>
-          </div>
+          ${shortcut(
+            "Ctrl + F",
+            "Mở Navigation Pane"
+          )}
 
           <p>
-            Nếu tài liệu sử dụng Heading đúng cách, Navigation Pane
-            sẽ hiển thị cấu trúc chương và mục.
+            Nếu tài liệu sử dụng Heading đúng cách,
+            Navigation Pane sẽ hiển thị cấu trúc chương và mục.
           </p>
         `
       }
+
     ]
   },
 
@@ -1398,8 +2347,10 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "Section nâng cao",
+
         content: `
           <p>Mỗi Section có thể có:</p>
 
@@ -1413,8 +2364,10 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "24.1. Link to Previous",
+
         content: `
           <div class="warning">
             Nếu muốn Header/Footer của Section mới độc lập,
@@ -1422,6 +2375,7 @@ export const lessons: Lesson[] = [
           </div>
         `
       }
+
     ]
   },
 
@@ -1448,8 +2402,10 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "Đánh số trang chuyên nghiệp",
+
         content: `
           <p>Ví dụ:</p>
 
@@ -1469,6 +2425,7 @@ export const lessons: Lesson[] = [
           </ul>
         `
       }
+
     ]
   },
 
@@ -1494,24 +2451,57 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "Phím Alt",
+
         content: `
           <p>
-            Nhấn Alt để Word hiển thị các ký tự tương ứng với từng tab.
+            Nhấn Alt để Word hiển thị
+            các ký tự tương ứng với từng tab.
           </p>
 
           <table>
-            <tr><th>Phím</th><th>Tab</th></tr>
-            <tr><td>H</td><td>Home</td></tr>
-            <tr><td>N</td><td>Insert</td></tr>
-            <tr><td>P</td><td>Layout</td></tr>
-            <tr><td>S</td><td>References</td></tr>
-            <tr><td>R</td><td>Review</td></tr>
-            <tr><td>W</td><td>View</td></tr>
+
+            <tr>
+              <th>Phím</th>
+              <th>Tab</th>
+            </tr>
+
+            <tr>
+              <td>H</td>
+              <td>Home</td>
+            </tr>
+
+            <tr>
+              <td>N</td>
+              <td>Insert</td>
+            </tr>
+
+            <tr>
+              <td>P</td>
+              <td>Layout</td>
+            </tr>
+
+            <tr>
+              <td>S</td>
+              <td>References</td>
+            </tr>
+
+            <tr>
+              <td>R</td>
+              <td>Review</td>
+            </tr>
+
+            <tr>
+              <td>W</td>
+              <td>View</td>
+            </tr>
+
           </table>
         `
       }
+
     ]
   },
 
@@ -1537,13 +2527,15 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "Show/Hide",
+
         content: `
-          <div class="shortcut">
-            <kbd>Ctrl + Shift + 8</kbd>
-            <span>Hiện/ẩn các ký tự định dạng.</span>
-          </div>
+          ${shortcut(
+            "Ctrl + Shift + 8",
+            "Hiện / ẩn ký tự định dạng"
+          )}
 
           <p>Có thể thấy:</p>
 
@@ -1556,6 +2548,7 @@ export const lessons: Lesson[] = [
           </ul>
         `
       }
+
     ]
   },
 
@@ -1583,8 +2576,10 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "28.1. Văn bản bị nhảy trang",
+
         content: `
           <p>
             Kiểm tra Page Break, Section Break, Paragraph,
@@ -1593,21 +2588,26 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "28.2. Hình ảnh chạy lung tung",
+
         content: `
           <p>
             Kiểm tra Wrap Text.
           </p>
 
           <div class="note">
-            Nếu cần ổn định, có thể sử dụng In Line with Text.
+            Nếu cần ổn định,
+            có thể sử dụng In Line with Text.
           </div>
         `
       },
 
+
       {
         title: "28.3. Khoảng cách chữ không đều",
+
         content: `
           <p>
             Kiểm tra Font, Alignment, Justify,
@@ -1616,18 +2616,27 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "28.4. Copy từ Internet bị sai font",
+
         content: `
           <p>
-            Có thể dùng Paste as Text, Clear Formatting
-            hoặc Ctrl + Space.
+            Có thể dùng Paste as Text,
+            Clear Formatting hoặc Ctrl + Space.
           </p>
+
+          ${shortcut(
+            "Ctrl + Space",
+            "Xóa định dạng ký tự"
+          )}
         `
       },
 
+
       {
         title: "28.5. Mục lục không cập nhật",
+
         content: `
           <p>
             Update Table → Update entire table.
@@ -1635,15 +2644,18 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "28.6. Số trang bị sai",
+
         content: `
           <p>
-            Kiểm tra Section Break, Link to Previous
-            và Format Page Numbers.
+            Kiểm tra Section Break,
+            Link to Previous và Format Page Numbers.
           </p>
         `
       }
+
     ]
   },
 
@@ -1669,18 +2681,23 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "Phục hồi tài liệu",
+
         content: `
           <p>
-            Khi Word bị tắt đột ngột, kiểm tra Document Recovery.
+            Khi Word bị tắt đột ngột,
+            kiểm tra Document Recovery.
           </p>
 
           <p>
-            File → Info → Manage Document → Recover Unsaved Documents.
+            File → Info → Manage Document
+            → Recover Unsaved Documents.
           </p>
         `
       }
+
     ]
   },
 
@@ -1708,20 +2725,45 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "7 nguyên tắc",
+
         content: `
           <ol>
-            <li>Không dùng Space nhiều lần để căn chỉnh.</li>
-            <li>Không dùng Enter nhiều lần để sang trang.</li>
-            <li>Không tự đánh số tiêu đề bằng tay trong tài liệu lớn.</li>
-            <li>Không tự gõ số hình.</li>
-            <li>Không tự gõ mục lục.</li>
-            <li>Không định dạng từng tiêu đề bằng tay.</li>
-            <li>Tài liệu dài nên dùng Heading, Caption, Cross-reference và Section.</li>
+            <li>
+              Không dùng Space nhiều lần để căn chỉnh.
+            </li>
+
+            <li>
+              Không dùng Enter nhiều lần để sang trang.
+            </li>
+
+            <li>
+              Không tự đánh số tiêu đề bằng tay
+              trong tài liệu lớn.
+            </li>
+
+            <li>
+              Không tự gõ số hình.
+            </li>
+
+            <li>
+              Không tự gõ mục lục.
+            </li>
+
+            <li>
+              Không định dạng từng tiêu đề bằng tay.
+            </li>
+
+            <li>
+              Tài liệu dài nên dùng Heading,
+              Caption, Cross-reference và Section.
+            </li>
           </ol>
         `
       }
+
     ]
   },
 
@@ -1748,8 +2790,10 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "Quy trình 10 bước",
+
         content: `
           <ol>
             <li>Thiết lập trang.</li>
@@ -1765,6 +2809,7 @@ export const lessons: Lesson[] = [
           </ol>
         `
       }
+
     ]
   },
 
@@ -1789,22 +2834,51 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "Yêu cầu",
+
         content: `
           <ol>
-            <li>Tạo tài liệu Báo cáo thực hành Microsoft Word.</li>
-            <li>Viết phần giới thiệu.</li>
-            <li>Tạo danh sách Bullet.</li>
-            <li>Tạo Numbering.</li>
-            <li>Tạo bảng 5 sinh viên.</li>
-            <li>Chèn hình ảnh.</li>
-            <li>Font Times New Roman, cỡ 13.</li>
-            <li>Line spacing 1.5.</li>
-            <li>Đánh số trang.</li>
+            <li>
+              Tạo tài liệu Báo cáo thực hành Microsoft Word.
+            </li>
+
+            <li>
+              Viết phần giới thiệu.
+            </li>
+
+            <li>
+              Tạo danh sách Bullet.
+            </li>
+
+            <li>
+              Tạo Numbering.
+            </li>
+
+            <li>
+              Tạo bảng 5 sinh viên.
+            </li>
+
+            <li>
+              Chèn hình ảnh.
+            </li>
+
+            <li>
+              Font Times New Roman, cỡ 13.
+            </li>
+
+            <li>
+              Line spacing 1.5.
+            </li>
+
+            <li>
+              Đánh số trang.
+            </li>
           </ol>
         `
       }
+
     ]
   },
 
@@ -1829,10 +2903,14 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "Yêu cầu",
+
         content: `
-          <p>Tạo tài liệu khoảng 8–10 trang gồm:</p>
+          <p>
+            Tạo tài liệu khoảng 8–10 trang gồm:
+          </p>
 
           <ul>
             <li>Trang bìa.</li>
@@ -1843,9 +2921,14 @@ export const lessons: Lesson[] = [
             <li>Tài liệu tham khảo.</li>
           </ul>
 
-          <p>Sử dụng Heading, Multilevel List, Caption và Page Number.</p>
+          <p>
+            Sử dụng Heading,
+            Multilevel List,
+            Caption và Page Number.
+          </p>
         `
       }
+
     ]
   },
 
@@ -1871,8 +2954,10 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "Yêu cầu",
+
         content: `
           <ul>
             <li>Trang bìa không đánh số.</li>
@@ -1889,6 +2974,7 @@ export const lessons: Lesson[] = [
           </ul>
         `
       }
+
     ]
   },
 
@@ -1913,18 +2999,35 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "Yêu cầu",
+
         content: `
           <ol>
-            <li>Tạo Excel có HoTen, NgaySinh, Lop, Diem.</li>
-            <li>Nhập 10 người.</li>
-            <li>Tạo mẫu Giấy chứng nhận trong Word.</li>
-            <li>Chèn các Merge Field.</li>
-            <li>Finish & Merge để tạo 10 chứng nhận.</li>
+            <li>
+              Tạo Excel có HoTen, NgaySinh, Lop, Diem.
+            </li>
+
+            <li>
+              Nhập 10 người.
+            </li>
+
+            <li>
+              Tạo mẫu Giấy chứng nhận trong Word.
+            </li>
+
+            <li>
+              Chèn các Merge Field.
+            </li>
+
+            <li>
+              Finish & Merge để tạo 10 chứng nhận.
+            </li>
           </ol>
         `
       }
+
     ]
   },
 
@@ -1951,40 +3054,59 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "Mức 1 — Bắt buộc",
-        content: `
-          <div class="shortcut"><kbd>Ctrl + A</kbd><span>Chọn tất cả.</span></div>
-          <div class="shortcut"><kbd>Ctrl + C</kbd><span>Copy.</span></div>
-          <div class="shortcut"><kbd>Ctrl + X</kbd><span>Cut.</span></div>
-          <div class="shortcut"><kbd>Ctrl + V</kbd><span>Paste.</span></div>
-          <div class="shortcut"><kbd>Ctrl + Z</kbd><span>Undo.</span></div>
-          <div class="shortcut"><kbd>Ctrl + S</kbd><span>Save.</span></div>
-          <div class="shortcut"><kbd>Ctrl + F</kbd><span>Find.</span></div>
-          <div class="shortcut"><kbd>Ctrl + H</kbd><span>Replace.</span></div>
-        `
+
+        content: shortcutGroup(
+          "Phím tắt bắt buộc",
+
+          `
+            ${shortcut("Ctrl + A", "Chọn tất cả")}
+            ${shortcut("Ctrl + C", "Copy")}
+            ${shortcut("Ctrl + X", "Cut")}
+            ${shortcut("Ctrl + V", "Paste")}
+            ${shortcut("Ctrl + Z", "Undo")}
+            ${shortcut("Ctrl + S", "Save")}
+            ${shortcut("Ctrl + F", "Find")}
+            ${shortcut("Ctrl + H", "Replace")}
+          `
+        )
       },
+
 
       {
         title: "Mức 2 — Soạn thảo",
-        content: `
-          <div class="shortcut"><kbd>Ctrl + B</kbd><span>Bold.</span></div>
-          <div class="shortcut"><kbd>Ctrl + I</kbd><span>Italic.</span></div>
-          <div class="shortcut"><kbd>Ctrl + U</kbd><span>Underline.</span></div>
-          <div class="shortcut"><kbd>Ctrl + J</kbd><span>Justify.</span></div>
-        `
+
+        content: shortcutGroup(
+          "Phím tắt soạn thảo",
+
+          `
+            ${shortcut("Ctrl + B", "Bold")}
+            ${shortcut("Ctrl + I", "Italic")}
+            ${shortcut("Ctrl + U", "Underline")}
+            ${shortcut("Ctrl + J", "Justify")}
+          `
+        )
       },
+
 
       {
         title: "Mức 4 — Chuyên nghiệp",
-        content: `
-          <div class="shortcut"><kbd>Ctrl + Enter</kbd><span>Page Break.</span></div>
-          <div class="shortcut"><kbd>Ctrl + Shift + 8</kbd><span>Hiện ký tự ẩn.</span></div>
-          <div class="shortcut"><kbd>Shift + F3</kbd><span>Change Case.</span></div>
-          <div class="shortcut"><kbd>F4</kbd><span>Lặp thao tác.</span></div>
-          <div class="shortcut"><kbd>F7</kbd><span>Kiểm tra chính tả.</span></div>
-        `
+
+        content: shortcutGroup(
+          "Phím tắt chuyên nghiệp",
+
+          `
+            ${shortcut("Ctrl + Enter", "Page Break")}
+            ${shortcut("Ctrl + Shift + 8", "Hiện ký tự ẩn")}
+            ${shortcut("Shift + F3", "Change Case")}
+            ${shortcut("F4", "Lặp thao tác")}
+            ${shortcut("F7", "Kiểm tra chính tả")}
+          `
+        )
       }
+
     ]
   },
 
@@ -2010,8 +3132,10 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "Word cơ bản",
+
         content: `
           <ul>
             <li>Tạo và lưu file.</li>
@@ -2023,8 +3147,10 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "Word trung cấp",
+
         content: `
           <ul>
             <li>Tab và Page Setup.</li>
@@ -2036,8 +3162,10 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "Word nâng cao",
+
         content: `
           <ul>
             <li>Section.</li>
@@ -2049,6 +3177,7 @@ export const lessons: Lesson[] = [
           </ul>
         `
       }
+
     ]
   },
 
@@ -2076,8 +3205,10 @@ export const lessons: Lesson[] = [
     ],
 
     sections: [
+
       {
         title: "Nội dung",
+
         content: `
           <ul>
             <li>Không sai chính tả.</li>
@@ -2087,8 +3218,10 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "Font và Paragraph",
+
         content: `
           <ul>
             <li>Font thống nhất.</li>
@@ -2100,8 +3233,10 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "Trang",
+
         content: `
           <ul>
             <li>Khổ A4 đúng.</li>
@@ -2111,8 +3246,10 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "Hình và bảng",
+
         content: `
           <ul>
             <li>Hình rõ nét.</li>
@@ -2123,24 +3260,28 @@ export const lessons: Lesson[] = [
         `
       },
 
+
       {
         title: "Kiểm tra cuối",
-        content: `
-          <div class="shortcut">
-            <kbd>Ctrl + Shift + 8</kbd>
-            <span>Kiểm tra ký tự định dạng ẩn.</span>
-          </div>
 
-          <div class="shortcut">
-            <kbd>Ctrl + S</kbd>
-            <span>Lưu tài liệu.</span>
-          </div>
+        content: `
+          ${shortcut(
+            "Ctrl + Shift + 8",
+            "Kiểm tra ký tự định dạng ẩn"
+          )}
+
+          ${shortcut(
+            "Ctrl + S",
+            "Lưu tài liệu"
+          )}
 
           <p>
-            Sau khi kiểm tra hoàn tất có thể xuất PDF.
+            Sau khi kiểm tra hoàn tất
+            có thể xuất PDF.
           </p>
         `
       }
+
     ]
   }
 

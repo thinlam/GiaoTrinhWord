@@ -1,11 +1,50 @@
-/* global Office */
+import "./taskpane.css";
 
-import { lessons } from "../lessons/lessons";
-
-import type {
-  Lesson,
-  LessonLevel
+import {
+  lessons,
+  type Lesson,
+  type LessonLevel
 } from "../lessons/lessons";
+
+
+// =========================================================
+// CONFIG
+// =========================================================
+
+interface LevelConfig {
+  description: string;
+  className: string;
+}
+
+
+const LEVELS: Record<LessonLevel, LevelConfig> = {
+
+  "CƠ BẢN": {
+    description: "Kiến thức nền tảng",
+    className: "level-basic"
+  },
+
+  "TRUNG CẤP": {
+    description: "Kỹ năng xử lý tài liệu",
+    className: "level-intermediate"
+  },
+
+  "NÂNG CAO": {
+    description: "Kỹ năng Word chuyên nghiệp",
+    className: "level-advanced"
+  },
+
+  "TRA CỨU": {
+    description: "Mẹo, lỗi và kỹ thuật cần nhớ",
+    className: "level-reference"
+  },
+
+  "THỰC HÀNH": {
+    description: "Bài tập và kiểm tra kỹ năng",
+    className: "level-practice"
+  }
+
+};
 
 
 const LEVEL_ORDER: LessonLevel[] = [
@@ -17,299 +56,295 @@ const LEVEL_ORDER: LessonLevel[] = [
 ];
 
 
-const LEVEL_INFO: Record<
-  LessonLevel,
-  {
-    icon: string;
-    description: string;
-  }
-> = {
+// =========================================================
+// DOM
+// =========================================================
 
-  "CƠ BẢN": {
-    icon: "●",
-    description: "Kiến thức nền tảng"
-  },
+let appBody: HTMLElement;
 
-  "TRUNG CẤP": {
-    icon: "●",
-    description: "Kỹ năng xử lý tài liệu"
-  },
+let sideloadMessage: HTMLElement;
 
-  "NÂNG CAO": {
-    icon: "●",
-    description: "Tài liệu chuyên nghiệp"
-  },
+let homeView: HTMLElement;
 
-  "TRA CỨU": {
-    icon: "●",
-    description: "Tra cứu và xử lý lỗi"
-  },
+let lessonView: HTMLElement;
 
-  "THỰC HÀNH": {
-    icon: "●",
-    description: "Bài tập và kiểm tra"
-  }
+let lessonGroups: HTMLElement;
 
-};
+let searchResultInfo: HTMLElement;
+
+let lessonContent: HTMLElement;
+
+let searchInput: HTMLInputElement;
+
+let clearSearchButton: HTMLButtonElement;
+
+let introSection: HTMLElement | null;
+
+let searchSection: HTMLElement | null;
 
 
-/* =========================================================
-   OFFICE READY
-========================================================= */
-
-Office.onReady((info) => {
-
-  if (info.host !== Office.HostType.Word) {
-    return;
-  }
+let currentKeyword = "";
 
 
-  const sideload =
-    document.getElementById(
-      "sideload-msg"
-    );
+// =========================================================
+// START OFFICE
+// =========================================================
 
+Office.onReady(() => {
 
-  const app =
-    document.getElementById(
-      "app-body"
-    );
+  initializeDOM();
 
+  bindEvents();
 
-  if (sideload) {
-    sideload.style.display = "none";
-  }
+  showApplication();
 
-
-  if (app) {
-    app.style.display = "block";
-  }
-
-
-  renderLessons(lessons);
-
-  setupLessonClicks();
-
-  setupSearch();
-
-  setupBackButton();
-
-  setupClearSearch();
+  renderHome();
 
 });
 
 
-/* =========================================================
-   RENDER HOME
-========================================================= */
+// =========================================================
+// INIT DOM
+// =========================================================
 
-function renderLessons(
-  source: Lesson[]
-): void {
+function initializeDOM(): void {
 
-  const container =
-    document.getElementById(
-      "lesson-groups"
+  appBody =
+    getElement("app-body");
+
+
+  sideloadMessage =
+    getElement("sideload-msg");
+
+
+  homeView =
+    getElement("home-view");
+
+
+  lessonView =
+    getElement("lesson-view");
+
+
+  lessonGroups =
+    getElement("lesson-groups");
+
+
+  searchResultInfo =
+    getElement("search-result-info");
+
+
+  lessonContent =
+    getElement("lesson-content");
+
+
+  searchInput =
+    getElement<HTMLInputElement>("search");
+
+
+  clearSearchButton =
+    getElement<HTMLButtonElement>("clear-search");
+
+
+  introSection =
+    document.querySelector(
+      ".intro-section"
     );
 
 
-  if (!container) {
-    return;
+  searchSection =
+    document.querySelector(
+      ".search-section"
+    );
+
+}
+
+
+// =========================================================
+// GET ELEMENT
+// =========================================================
+
+function getElement<T extends HTMLElement = HTMLElement>(
+  id: string
+): T {
+
+  const element =
+    document.getElementById(id);
+
+
+  if (!element) {
+
+    throw new Error(
+      `Không tìm thấy element #${id}`
+    );
+
   }
 
 
-  container.innerHTML = "";
+  return element as T;
+
+}
 
 
-  LEVEL_ORDER.forEach((level) => {
+// =========================================================
+// SHOW APP
+// =========================================================
 
-    const levelLessons =
-      source.filter(
-        lesson =>
-          lesson.level === level
-      );
+function showApplication(): void {
 
-
-    if (levelLessons.length === 0) {
-      return;
-    }
+  sideloadMessage.style.display =
+    "none";
 
 
-    const group =
-      document.createElement(
-        "section"
-      );
+  appBody.style.display =
+    "block";
+
+}
 
 
-    group.className =
-      `lesson-group level-${levelToClass(level)}`;
+// =========================================================
+// EVENTS
+// =========================================================
+
+function bindEvents(): void {
+
+  searchInput.addEventListener(
+    "input",
+    handleSearch
+  );
 
 
-    const heading =
-      document.createElement(
-        "div"
-      );
+  clearSearchButton.addEventListener(
+    "click",
+    clearSearch
+  );
 
 
-    heading.className =
-      "group-heading";
+  lessonGroups.addEventListener(
+    "click",
+    handleLessonClick
+  );
 
 
-    heading.innerHTML = `
-      <div class="group-title">
-        <span class="level-dot"></span>
-
-        <div>
-          <strong>
-            ${level}
-          </strong>
-
-          <small>
-            ${LEVEL_INFO[level].description}
-          </small>
-        </div>
-      </div>
-
-      <span class="lesson-count">
-        ${levelLessons.length}
-      </span>
-    `;
-
-
-    group.appendChild(
-      heading
+  document
+    .getElementById("back-button")
+    ?.addEventListener(
+      "click",
+      showHomeView
     );
 
 
-    const cards =
-      document.createElement(
-        "div"
-      );
+  document
+    .getElementById(
+      "back-button-bottom"
+    )
+    ?.addEventListener(
+      "click",
+      showHomeView
+    );
+
+}
 
 
-    cards.className =
-      "lesson-cards";
+// =========================================================
+// NORMALIZE
+// =========================================================
+
+function normalizeText(
+  value: string
+): string {
+
+  return value
+    .normalize("NFD")
+
+    .replace(
+      /[\u0300-\u036f]/g,
+      ""
+    )
+
+    .replace(
+      /đ/g,
+      "d"
+    )
+
+    .replace(
+      /Đ/g,
+      "D"
+    )
+
+    .toLowerCase()
+
+    .trim();
+
+}
 
 
-    levelLessons.forEach(
-      lesson => {
+// =========================================================
+// SEARCH
+// =========================================================
 
-        cards.appendChild(
-          createLessonCard(
-            lesson
-          )
+function handleSearch(): void {
+
+  currentKeyword =
+    searchInput.value.trim();
+
+
+  renderHome();
+
+}
+
+
+// =========================================================
+// CLEAR SEARCH
+// =========================================================
+
+function clearSearch(): void {
+
+  currentKeyword = "";
+
+  searchInput.value = "";
+
+  renderHome();
+
+  searchInput.focus();
+
+}
+
+
+// =========================================================
+// FILTER
+// =========================================================
+
+function getFilteredLessons(): Lesson[] {
+
+  if (!currentKeyword) {
+
+    return lessons;
+
+  }
+
+
+  const keyword =
+    normalizeText(
+      currentKeyword
+    );
+
+
+  return lessons.filter(
+    (lesson) => {
+
+      const text =
+        normalizeText(
+          [
+            lesson.title,
+            lesson.description,
+            lesson.level,
+            ...lesson.keywords
+          ].join(" ")
         );
 
-      }
-    );
 
-
-    group.appendChild(
-      cards
-    );
-
-
-    container.appendChild(
-      group
-    );
-
-  });
-
-
-  updateSearchInfo(
-    source.length
-  );
-
-}
-
-
-/* =========================================================
-   CREATE LESSON CARD
-========================================================= */
-
-function createLessonCard(
-  lesson: Lesson
-): HTMLButtonElement {
-
-  const button =
-    document.createElement(
-      "button"
-    );
-
-
-  button.type = "button";
-
-  button.className =
-    "lesson-card";
-
-  button.dataset.lessonId =
-    lesson.id;
-
-
-  button.innerHTML = `
-    <div class="part-number">
-      ${lesson.part}
-    </div>
-
-    <div class="card-content">
-
-      <strong>
-        ${lesson.title}
-      </strong>
-
-      <small>
-        ${lesson.description}
-      </small>
-
-    </div>
-
-    <div class="card-arrow">
-      ›
-    </div>
-  `;
-
-
-  return button;
-
-}
-
-
-/* =========================================================
-   CLICK LESSON
-========================================================= */
-
-function setupLessonClicks(): void {
-
-  document.addEventListener(
-    "click",
-    event => {
-
-      const target =
-        event.target as HTMLElement;
-
-
-      const button =
-        target.closest(
-          ".lesson-card"
-        ) as HTMLButtonElement | null;
-
-
-      if (!button) {
-        return;
-      }
-
-
-      const lessonId =
-        button.dataset.lessonId;
-
-
-      if (!lessonId) {
-        return;
-      }
-
-
-      openLesson(
-        lessonId
+      return text.includes(
+        keyword
       );
 
     }
@@ -318,92 +353,482 @@ function setupLessonClicks(): void {
 }
 
 
-/* =========================================================
-   OPEN LESSON
-========================================================= */
+// =========================================================
+// HOME
+// =========================================================
 
-function openLesson(
-  lessonId: string
+function renderHome(): void {
+
+  const filteredLessons =
+    getFilteredLessons();
+
+
+  clearSearchButton.style.visibility =
+    currentKeyword
+      ? "visible"
+      : "hidden";
+
+
+  renderSearchInfo(
+    filteredLessons
+  );
+
+
+  renderLessonGroups(
+    filteredLessons
+  );
+
+}
+
+
+// =========================================================
+// SEARCH INFO
+// =========================================================
+
+function renderSearchInfo(
+  filteredLessons: Lesson[]
 ): void {
+
+  if (!currentKeyword) {
+
+    searchResultInfo.innerHTML = "";
+
+    return;
+
+  }
+
+
+  searchResultInfo.innerHTML = `
+
+    <div class="search-result-message">
+
+      Tìm thấy
+
+      <strong>
+        ${filteredLessons.length}
+      </strong>
+
+      kết quả cho
+
+      <span>
+        “${escapeHtml(currentKeyword)}”
+      </span>
+
+    </div>
+
+  `;
+
+}
+
+
+// =========================================================
+// RENDER GROUPS
+// =========================================================
+
+function renderLessonGroups(
+  filteredLessons: Lesson[]
+): void {
+
+  if (
+    filteredLessons.length === 0
+  ) {
+
+    lessonGroups.innerHTML =
+      renderEmptyState();
+
+    return;
+
+  }
+
+
+  lessonGroups.innerHTML =
+    LEVEL_ORDER
+      .map(
+        (level) =>
+          renderLevel(
+            level,
+            filteredLessons
+          )
+      )
+      .join("");
+
+}
+
+
+// =========================================================
+// RENDER LEVEL
+// =========================================================
+
+function renderLevel(
+  level: LessonLevel,
+  filteredLessons: Lesson[]
+): string {
+
+  const levelLessons =
+    filteredLessons.filter(
+      (lesson) =>
+        lesson.level === level
+    );
+
+
+  if (
+    levelLessons.length === 0
+  ) {
+
+    return "";
+
+  }
+
+
+  const config =
+    LEVELS[level];
+
+
+  return `
+
+    <section
+      class="
+        lesson-group
+        ${config.className}
+      "
+    >
+
+      <div class="lesson-group-header">
+
+        <div class="lesson-group-heading">
+
+          <span
+            class="lesson-group-dot"
+            aria-hidden="true"
+          ></span>
+
+
+          <div>
+
+            <h2>
+              ${level}
+            </h2>
+
+            <p class="lesson-group-description">
+              ${config.description}
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <span class="lesson-group-count">
+
+          ${levelLessons.length}
+
+        </span>
+
+      </div>
+
+
+      <div class="lesson-list">
+
+        ${levelLessons
+          .map(
+            renderLessonCard
+          )
+          .join("")}
+
+      </div>
+
+    </section>
+
+  `;
+
+}
+
+
+// =========================================================
+// LESSON CARD
+// =========================================================
+
+function renderLessonCard(
+  lesson: Lesson
+): string {
+
+  return `
+
+    <button
+      class="lesson-card"
+      type="button"
+      data-lesson-id="${escapeHtml(
+        lesson.id
+      )}"
+    >
+
+      <!-- NUMBER -->
+
+      <span class="lesson-number">
+
+        ${String(
+          lesson.part
+        ).padStart(
+          2,
+          "0"
+        )}
+
+      </span>
+
+
+      <!-- CONTENT -->
+
+      <div class="lesson-card-content">
+
+        <h3>
+
+          ${escapeHtml(
+            lesson.title
+          )}
+
+        </h3>
+
+
+        <p>
+
+          ${escapeHtml(
+            lesson.description
+          )}
+
+        </p>
+
+      </div>
+
+
+      <!-- ARROW -->
+
+      <span
+        class="lesson-arrow"
+        aria-hidden="true"
+      >
+
+        ›
+
+      </span>
+
+    </button>
+
+  `;
+
+}
+
+
+// =========================================================
+// EMPTY STATE
+// =========================================================
+
+function renderEmptyState(): string {
+
+  return `
+
+    <div class="empty-state">
+
+      <div class="empty-state-icon">
+        ⌕
+      </div>
+
+
+      <h3>
+        Không tìm thấy bài học
+      </h3>
+
+
+      <p>
+
+        Thử tìm bằng từ khóa khác như
+
+        <strong>Ctrl + C</strong>,
+
+        <strong>Mục lục</strong>
+
+        hoặc
+
+        <strong>Section</strong>.
+
+      </p>
+
+
+      <button
+        id="empty-clear-search"
+        type="button"
+        class="empty-clear-button"
+      >
+
+        Xóa tìm kiếm
+
+      </button>
+
+    </div>
+
+  `;
+
+}
+
+
+// =========================================================
+// LESSON CLICK
+// =========================================================
+
+function handleLessonClick(
+  event: MouseEvent
+): void {
+
+  const target =
+    event.target as HTMLElement;
+
+
+  // nút clear empty
+  const emptyClear =
+    target.closest(
+      "#empty-clear-search"
+    );
+
+
+  if (emptyClear) {
+
+    clearSearch();
+
+    return;
+
+  }
+
+
+  const card =
+    target.closest<HTMLElement>(
+      "[data-lesson-id]"
+    );
+
+
+  if (!card) {
+
+    return;
+
+  }
+
+
+  const id =
+    card.dataset.lessonId;
+
+
+  if (!id) {
+
+    return;
+
+  }
+
 
   const lesson =
     lessons.find(
-      item =>
-        item.id === lessonId
+      (item) =>
+        item.id === id
     );
 
 
   if (!lesson) {
 
-    console.error(
-      "Không tìm thấy lesson:",
-      lessonId
-    );
-
     return;
 
   }
 
 
-  const homeView =
-    document.getElementById(
-      "home-view"
-    );
+  showLesson(
+    lesson
+  );
+
+}
 
 
-  const lessonView =
-    document.getElementById(
-      "lesson-view"
-    );
+// =========================================================
+// SHOW LESSON
+// =========================================================
+
+function showLesson(
+  lesson: Lesson
+): void {
+
+  homeView.hidden = true;
+
+  lessonView.hidden = false;
+
+
+  // Ẩn intro + search khi đọc bài
+  if (introSection) {
+
+    introSection.style.display =
+      "none";
+
+  }
+
+
+  if (searchSection) {
+
+    searchSection.style.display =
+      "none";
+
+  }
+
+
+  renderLessonHeader(
+    lesson
+  );
+
+
+  renderLessonSections(
+    lesson
+  );
+
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+}
+
+
+// =========================================================
+// LESSON HEADER
+// =========================================================
+
+function renderLessonHeader(
+  lesson: Lesson
+): void {
+
+  const part =
+    getElement("lesson-part");
+
+
+  const level =
+    getElement("lesson-level");
 
 
   const title =
-    document.getElementById(
-      "lesson-title"
-    );
+    getElement("lesson-title");
 
 
   const description =
-    document.getElementById(
+    getElement(
       "lesson-description"
     );
 
 
-  const level =
-    document.getElementById(
-      "lesson-level"
-    );
+  part.textContent =
+    `PHẦN ${lesson.part}`;
 
 
-  const part =
-    document.getElementById(
-      "lesson-part"
-    );
+  level.textContent =
+    lesson.level;
 
 
-  const content =
-    document.getElementById(
-      "lesson-content"
-    );
-
-
-  if (
-    !homeView ||
-    !lessonView ||
-    !title ||
-    !description ||
-    !level ||
-    !part ||
-    !content
-  ) {
-
-    console.error(
-      "Thiếu element HTML."
-    );
-
-    return;
-
-  }
+  level.className =
+    `level-badge ${getLevelBadgeClass(
+      lesson.level
+    )}`;
 
 
   title.textContent =
@@ -413,402 +838,161 @@ function openLesson(
   description.textContent =
     lesson.description;
 
-
-  level.textContent =
-    lesson.level;
-
-
-  level.className =
-    `level-badge level-${levelToClass(lesson.level)}`;
-
-
-  part.textContent =
-    `PHẦN ${lesson.part}`;
-
-
-  content.innerHTML =
-    lesson.sections
-      .map(
-        section => `
-          <section class="lesson-section">
-
-            <h3>
-              ${section.title}
-            </h3>
-
-            <div class="section-content">
-              ${section.content}
-            </div>
-
-          </section>
-        `
-      )
-      .join("");
-
-
-  homeView.hidden =
-    true;
-
-
-  homeView.style.display =
-    "none";
-
-
-  lessonView.hidden =
-    false;
-
-
-  lessonView.style.display =
-    "block";
-
-
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
-
 }
 
 
-/* =========================================================
-   BACK
-========================================================= */
-
-function setupBackButton(): void {
-
-  const button =
-    document.getElementById(
-      "back-button"
-    );
-
-
-  button?.addEventListener(
-    "click",
-    showHome
-  );
-
-}
-
-
-function showHome(): void {
-
-  const homeView =
-    document.getElementById(
-      "home-view"
-    );
-
-
-  const lessonView =
-    document.getElementById(
-      "lesson-view"
-    );
-
-
-  if (lessonView) {
-
-    lessonView.hidden =
-      true;
-
-    lessonView.style.display =
-      "none";
-
-  }
-
-
-  if (homeView) {
-
-    homeView.hidden =
-      false;
-
-    homeView.style.display =
-      "block";
-
-  }
-
-
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
-
-}
-
-
-/* =========================================================
-   SEARCH
-========================================================= */
-
-function setupSearch(): void {
-
-  const input =
-    document.getElementById(
-      "search"
-    ) as HTMLInputElement | null;
-
-
-  if (!input) {
-    return;
-  }
-
-
-  input.addEventListener(
-    "input",
-    () => {
-
-      const query =
-        normalizeText(
-          input.value
-        );
-
-
-      if (!query) {
-
-        renderLessons(
-          lessons
-        );
-
-        return;
-
-      }
-
-
-      const filtered =
-        lessons.filter(
-          lesson =>
-            lessonMatches(
-              lesson,
-              query
-            )
-        );
-
-
-      renderLessons(
-        filtered
-      );
-
-    }
-  );
-
-}
-
-
-/* =========================================================
-   SEARCH MATCHING
-========================================================= */
-
-function lessonMatches(
-  lesson: Lesson,
-  query: string
-): boolean {
-
-  const sectionText =
-    lesson.sections
-      .map(
-        section =>
-          `${section.title} ${stripHtml(section.content)}`
-      )
-      .join(" ");
-
-
-  const searchable =
-    normalizeText(
-      [
-        lesson.part.toString(),
-        lesson.title,
-        lesson.level,
-        lesson.description,
-        lesson.keywords.join(" "),
-        sectionText
-      ].join(" ")
-    );
-
-
-  return searchable.includes(
-    query
-  );
-
-}
-
-
-/* =========================================================
-   CLEAR SEARCH
-========================================================= */
-
-function setupClearSearch(): void {
-
-  const button =
-    document.getElementById(
-      "clear-search"
-    );
-
-
-  const input =
-    document.getElementById(
-      "search"
-    ) as HTMLInputElement | null;
-
-
-  button?.addEventListener(
-    "click",
-    () => {
-
-      if (!input) {
-        return;
-      }
-
-
-      input.value = "";
-
-
-      renderLessons(
-        lessons
-      );
-
-
-      input.focus();
-
-    }
-  );
-
-}
-
-
-/* =========================================================
-   SEARCH RESULT
-========================================================= */
-
-function updateSearchInfo(
-  count: number
-): void {
-
-  const element =
-    document.getElementById(
-      "search-result-info"
-    );
-
-
-  const input =
-    document.getElementById(
-      "search"
-    ) as HTMLInputElement | null;
-
-
-  if (!element) {
-    return;
-  }
-
-
-  if (
-    !input ||
-    input.value.trim() === ""
-  ) {
-
-    element.innerHTML = "";
-
-    return;
-
-  }
-
-
-  if (count === 0) {
-
-    element.innerHTML = `
-      <div class="no-result">
-        Không tìm thấy bài học phù hợp.
-      </div>
-    `;
-
-    return;
-
-  }
-
-
-  element.innerHTML = `
-    <div class="result-info">
-      Tìm thấy
-      <strong>${count}</strong>
-      bài học.
-    </div>
-  `;
-
-}
-
-
-/* =========================================================
-   UTILS
-========================================================= */
-
-function normalizeText(
-  value: string
-): string {
-
-  return value
-    .normalize("NFD")
-    .replace(
-      /[\u0300-\u036f]/g,
-      ""
-    )
-    .replace(
-      /đ/g,
-      "d"
-    )
-    .replace(
-      /Đ/g,
-      "D"
-    )
-    .toLowerCase()
-    .trim();
-
-}
-
-
-function stripHtml(
-  html: string
-): string {
-
-  const element =
-    document.createElement(
-      "div"
-    );
-
-
-  element.innerHTML =
-    html;
-
-
-  return (
-    element.textContent ||
-    element.innerText ||
-    ""
-  );
-
-}
-
-
-function levelToClass(
+// =========================================================
+// LEVEL BADGE
+// =========================================================
+
+function getLevelBadgeClass(
   level: LessonLevel
 ): string {
 
   switch (level) {
 
     case "CƠ BẢN":
-      return "basic";
+      return "badge-basic";
 
     case "TRUNG CẤP":
-      return "intermediate";
+      return "badge-intermediate";
 
     case "NÂNG CAO":
-      return "advanced";
+      return "badge-advanced";
 
     case "TRA CỨU":
-      return "lookup";
+      return "badge-reference";
 
     case "THỰC HÀNH":
-      return "practice";
-
-    default:
-      return "basic";
+      return "badge-practice";
 
   }
+
+}
+
+
+// =========================================================
+// LESSON SECTIONS
+// =========================================================
+
+function renderLessonSections(
+  lesson: Lesson
+): void {
+
+  lessonContent.innerHTML =
+    lesson.sections
+      .map(
+        (section, index) => `
+
+          <article class="lesson-section">
+
+            <div class="lesson-section-number">
+
+              ${String(
+                index + 1
+              ).padStart(
+                2,
+                "0"
+              )}
+
+            </div>
+
+
+            <h3>
+
+              ${escapeHtml(
+                section.title
+              )}
+
+            </h3>
+
+
+            <div class="lesson-section-body">
+
+              ${section.content}
+
+            </div>
+
+          </article>
+
+        `
+      )
+      .join("");
+
+}
+
+
+// =========================================================
+// HOME VIEW
+// =========================================================
+
+function showHomeView(): void {
+
+  lessonView.hidden = true;
+
+  homeView.hidden = false;
+
+
+  if (introSection) {
+
+    introSection.style.display =
+      "";
+
+  }
+
+
+  if (searchSection) {
+
+    searchSection.style.display =
+      "";
+
+  }
+
+
+  renderHome();
+
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+}
+
+
+// =========================================================
+// ESCAPE
+// =========================================================
+
+function escapeHtml(
+  value: string
+): string {
+
+  return value
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
 
 }
