@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OfficeApp
+    xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:type="TaskPaneApp">
+
+    <Id>a63daaaf-d345-455b-859b-2693a852209e</Id>
+
+    <Version>1.0.0.0</Version>
+
+    <ProviderName>Lam Nguyen Thin</ProviderName>
+
+    <DefaultLocale>vi-VN</DefaultLocale>
+
+    <DisplayName DefaultValue="GIAO TRINH WORD"/>
+
+    <Description
+        DefaultValue="Giao trinh Microsoft Word tu co ban den nang cao."/>
+
+    <IconUrl
+        DefaultValue="https://giaotrinh-word.vercel.app/assets/icon-32.png"/>
+
+    <SupportUrl
+        DefaultValue="https://giaotrinh-word.vercel.app/taskpane.html"/>
+
+    <AppDomains>
+        <AppDomain>https://giaotrinh-word.vercel.app</AppDomain>
+    </AppDomains>
+
+    <Hosts>
+        <Host Name="Document"/>
+    </Hosts>
+
+    <DefaultSettings>
+        <SourceLocation
+            DefaultValue="https://giaotrinh-word.vercel.app/taskpane.html"/>
+    </DefaultSettings>
+
+    <Permissions>ReadWriteDocument</Permissions>
+
+</OfficeApp>

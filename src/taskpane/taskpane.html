@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    http-equiv="X-UA-Compatible"
+    content="IE=Edge"
+  />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  />
+
+  <title>Giáo Trình Word</title>
+
+  <script
+    type="text/javascript"
+    src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js">
+  </script>
+
+  <link
+    href="taskpane.css"
+    rel="stylesheet"
+    type="text/css"
+  />
+</head>
+
+
+<body>
+
+  <!-- ==============================
+       LOADING
+  =============================== -->
+
+  <section id="sideload-msg">
+    <div class="loading">
+      Đang tải Giáo Trình Word...
+    </div>
+  </section>
+
+
+  <!-- ==============================
+       APP
+  =============================== -->
+
+  <main
+    id="app-body"
+    class="app"
+    style="display: none;"
+  >
+
+    <!-- HEADER -->
+
+    <header class="app-header">
+
+      <div class="brand">
+
+        <div class="brand-icon">
+          W
+        </div>
+
+        <div class="brand-text">
+
+          <h1>
+            GIÁO TRÌNH WORD
+          </h1>
+
+          <p>
+            Từ cơ bản đến nâng cao
+          </p>
+
+        </div>
+
+      </div>
+
+    </header>
+
+
+    <!-- SEARCH -->
+
+    <section class="search-section">
+
+      <div class="search-box">
+
+        <span class="search-icon">
+          🔍
+        </span>
+
+        <input
+          id="search"
+          type="text"
+          placeholder="Tìm: Ctrl + J, mục lục, Section..."
+          autocomplete="off"
+        />
+
+        <button
+          id="clear-search"
+          type="button"
+          title="Xóa tìm kiếm"
+        >
+          ×
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- HOME -->
+
+    <section id="home-view">
+
+      <div id="search-result-info"></div>
+
+      <div id="lesson-groups"></div>
+
+    </section>
+
+
+    <!-- LESSON -->
+
+    <section
+      id="lesson-view"
+      hidden
+    >
+
+      <div class="lesson-toolbar">
+
+        <button
+          id="back-button"
+          type="button"
+        >
+          ← Quay lại
+        </button>
+
+        <span id="lesson-part"></span>
+
+      </div>
+
+
+      <header class="lesson-header">
+
+        <span
+          id="lesson-level"
+          class="level-badge"
+        ></span>
+
+        <h2 id="lesson-title"></h2>
+
+        <p id="lesson-description"></p>
+
+      </header>
+
+
+      <div id="lesson-content"></div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+
+    <footer class="app-footer">
+
+      <span>
+        Giáo trình Microsoft Word
+      </span>
+
+      <span>
+        2026
+      </span>
+
+    </footer>
+
+  </main>
+
+
+  <script type="text/javascript">
+  </script>
+
+</body>
+
+</html>
