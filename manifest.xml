@@ -2,7 +2,12 @@
 <OfficeApp
     xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
     xsi:type="TaskPaneApp">
+
+    <!-- =====================================================
+         BASE MANIFEST - PHẦN ĐANG CHẠY ĐƯỢC
+    ====================================================== -->
 
     <Id>a63daaaf-d345-455b-859b-2693a852209e</Id>
 
@@ -37,5 +42,168 @@
     </DefaultSettings>
 
     <Permissions>ReadWriteDocument</Permissions>
+
+
+    <!-- =====================================================
+         RIBBON COMMAND
+    ====================================================== -->
+
+    <VersionOverrides
+        xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
+        xsi:type="VersionOverridesV1_0">
+
+        <!-- Add-in Commands yêu cầu 1.1 -->
+        <Requirements>
+            <bt:Sets DefaultMinVersion="1.1">
+                <bt:Set
+                    Name="AddinCommands"
+                    MinVersion="1.1"/>
+            </bt:Sets>
+        </Requirements>
+
+
+        <!-- WORD -->
+        <Hosts>
+
+            <Host xsi:type="Document">
+
+                <DesktopFormFactor>
+
+                    <!-- File command -->
+                    <FunctionFile resid="CommandsUrl"/>
+
+
+                    <!-- TRANG ĐẦU / HOME -->
+                    <ExtensionPoint xsi:type="PrimaryCommandSurface">
+
+                        <OfficeTab id="TabHome">
+
+                            <Group id="GiaoTrinhWord.Group">
+
+                                <Label resid="GroupLabel"/>
+
+                                <Icon>
+                                    <bt:Image
+                                        size="16"
+                                        resid="Icon16"/>
+
+                                    <bt:Image
+                                        size="32"
+                                        resid="Icon32"/>
+
+                                    <bt:Image
+                                        size="80"
+                                        resid="Icon80"/>
+                                </Icon>
+
+
+                                <!-- NÚT MỞ GIÁO TRÌNH -->
+                                <Control
+                                    xsi:type="Button"
+                                    id="GiaoTrinhWord.Open">
+
+                                    <Label resid="OpenLabel"/>
+
+                                    <Supertip>
+                                        <Title resid="OpenLabel"/>
+                                        <Description resid="OpenTip"/>
+                                    </Supertip>
+
+                                    <Icon>
+                                        <bt:Image
+                                            size="16"
+                                            resid="Icon16"/>
+
+                                        <bt:Image
+                                            size="32"
+                                            resid="Icon32"/>
+
+                                        <bt:Image
+                                            size="80"
+                                            resid="Icon80"/>
+                                    </Icon>
+
+                                    <Action xsi:type="ShowTaskpane">
+
+                                        <SourceLocation
+                                            resid="TaskpaneUrl"/>
+
+                                    </Action>
+
+                                </Control>
+
+                            </Group>
+
+                        </OfficeTab>
+
+                    </ExtensionPoint>
+
+                </DesktopFormFactor>
+
+            </Host>
+
+        </Hosts>
+
+
+        <!-- =================================================
+             RESOURCES
+        ================================================== -->
+
+        <Resources>
+
+            <bt:Images>
+
+                <bt:Image
+                    id="Icon16"
+                    DefaultValue="https://giaotrinh-word.vercel.app/assets/icon-16.png"/>
+
+                <bt:Image
+                    id="Icon32"
+                    DefaultValue="https://giaotrinh-word.vercel.app/assets/icon-32.png"/>
+
+                <bt:Image
+                    id="Icon80"
+                    DefaultValue="https://giaotrinh-word.vercel.app/assets/icon-80.png"/>
+
+            </bt:Images>
+
+
+            <bt:Urls>
+
+                <bt:Url
+                    id="CommandsUrl"
+                    DefaultValue="https://giaotrinh-word.vercel.app/commands.html"/>
+
+                <bt:Url
+                    id="TaskpaneUrl"
+                    DefaultValue="https://giaotrinh-word.vercel.app/taskpane.html"/>
+
+            </bt:Urls>
+
+
+            <bt:ShortStrings>
+
+                <bt:String
+                    id="GroupLabel"
+                    DefaultValue="GIÁO TRÌNH WORD"/>
+
+                <bt:String
+                    id="OpenLabel"
+                    DefaultValue="Mở Giáo Trình"/>
+
+            </bt:ShortStrings>
+
+
+            <bt:LongStrings>
+
+                <bt:String
+                    id="OpenTip"
+                    DefaultValue="Mở giáo trình Microsoft Word ngay bên cạnh tài liệu đang làm."/>
+
+            </bt:LongStrings>
+
+        </Resources>
+
+    </VersionOverrides>
 
 </OfficeApp>
