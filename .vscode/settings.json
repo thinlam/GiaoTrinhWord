@@ -1,8 +1,21 @@
 {
-    "eslint.validate": [
-      "javascript",
-      "javascriptreact",
-      "typescript"
-    ]
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+
+  "vscode-edge-devtools.webhint": false,
+
+  "css.lint.vendorPrefix": "ignore",
+  "css.lint.unknownVendorSpecificProperties": "ignore",
+
+  "css.validate": true,
+  "scss.validate": true,
+  "less.validate": true,
+
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
   }
-  
+}
