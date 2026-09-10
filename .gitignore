@@ -8,3 +8,7 @@ node_modules/
 # Build output
 dist/
 .env*.local
+
+# .NET build output
+bin/
+obj/

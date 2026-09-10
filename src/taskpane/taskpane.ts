@@ -1,10 +1,21 @@
 import "./taskpane.css";
 
+
 import {
-  lessons,
-  type Lesson,
-  type LessonLevel
+  lessons
 } from "../lessons/lessons";
+
+
+import type {
+  Lesson,
+  LessonLevel,
+  LessonSection
+} from "../types/lesson.types";
+
+
+import {
+  initChecker
+} from "../ui/checker-ui";
 
 
 // =========================================================
@@ -64,9 +75,13 @@ let appBody: HTMLElement;
 
 let sideloadMessage: HTMLElement;
 
+let learningArea: HTMLElement;
+
 let homeView: HTMLElement;
 
 let lessonView: HTMLElement;
+
+let checkerPage: HTMLElement;
 
 let lessonGroups: HTMLElement;
 
@@ -77,6 +92,12 @@ let lessonContent: HTMLElement;
 let searchInput: HTMLInputElement;
 
 let clearSearchButton: HTMLButtonElement;
+
+let openCheckerButton: HTMLButtonElement;
+
+let checkerBackButton: HTMLButtonElement;
+
+let checkerBackButtonBottom: HTMLButtonElement;
 
 let introSection: HTMLElement | null;
 
@@ -90,11 +111,27 @@ let currentKeyword = "";
 // START OFFICE
 // =========================================================
 
-Office.onReady(() => {
+Office.onReady((info) => {
+
+  if (
+    info.host !==
+    Office.HostType.Word
+  ) {
+
+    console.warn(
+      "Add-in này chỉ hỗ trợ Microsoft Word."
+    );
+
+    return;
+
+  }
+
 
   initializeDOM();
 
   bindEvents();
+
+  initChecker();
 
   showApplication();
 
@@ -110,39 +147,87 @@ Office.onReady(() => {
 function initializeDOM(): void {
 
   appBody =
-    getElement("app-body");
+    getElement(
+      "app-body"
+    );
 
 
   sideloadMessage =
-    getElement("sideload-msg");
+    getElement(
+      "sideload-msg"
+    );
+
+
+  learningArea =
+    getElement(
+      "learning-area"
+    );
 
 
   homeView =
-    getElement("home-view");
+    getElement(
+      "home-view"
+    );
 
 
   lessonView =
-    getElement("lesson-view");
+    getElement(
+      "lesson-view"
+    );
+
+
+  checkerPage =
+    getElement(
+      "checker-page"
+    );
 
 
   lessonGroups =
-    getElement("lesson-groups");
+    getElement(
+      "lesson-groups"
+    );
 
 
   searchResultInfo =
-    getElement("search-result-info");
+    getElement(
+      "search-result-info"
+    );
 
 
   lessonContent =
-    getElement("lesson-content");
+    getElement(
+      "lesson-content"
+    );
 
 
   searchInput =
-    getElement<HTMLInputElement>("search");
+    getElement<HTMLInputElement>(
+      "search"
+    );
 
 
   clearSearchButton =
-    getElement<HTMLButtonElement>("clear-search");
+    getElement<HTMLButtonElement>(
+      "clear-search"
+    );
+
+
+  openCheckerButton =
+    getElement<HTMLButtonElement>(
+      "open-checker-button"
+    );
+
+
+  checkerBackButton =
+    getElement<HTMLButtonElement>(
+      "checker-back-button"
+    );
+
+
+  checkerBackButtonBottom =
+    getElement<HTMLButtonElement>(
+      "checker-back-button-bottom"
+    );
 
 
   introSection =
@@ -163,12 +248,16 @@ function initializeDOM(): void {
 // GET ELEMENT
 // =========================================================
 
-function getElement<T extends HTMLElement = HTMLElement>(
+function getElement<
+  T extends HTMLElement = HTMLElement
+>(
   id: string
 ): T {
 
   const element =
-    document.getElementById(id);
+    document.getElementById(
+      id
+    );
 
 
   if (!element) {
@@ -226,7 +315,9 @@ function bindEvents(): void {
 
 
   document
-    .getElementById("back-button")
+    .getElementById(
+      "back-button"
+    )
     ?.addEventListener(
       "click",
       showHomeView
@@ -242,6 +333,24 @@ function bindEvents(): void {
       showHomeView
     );
 
+
+  openCheckerButton.addEventListener(
+    "click",
+    showCheckerView
+  );
+
+
+  checkerBackButton.addEventListener(
+    "click",
+    showLearningView
+  );
+
+
+  checkerBackButtonBottom.addEventListener(
+    "click",
+    showLearningView
+  );
+
 }
 
 
@@ -254,7 +363,10 @@ function normalizeText(
 ): string {
 
   return value
-    .normalize("NFD")
+
+    .normalize(
+      "NFD"
+    )
 
     .replace(
       /[\u0300-\u036f]/g,
@@ -299,11 +411,16 @@ function handleSearch(): void {
 
 function clearSearch(): void {
 
-  currentKeyword = "";
+  currentKeyword =
+    "";
 
-  searchInput.value = "";
+
+  searchInput.value =
+    "";
+
 
   renderHome();
+
 
   searchInput.focus();
 
@@ -314,7 +431,8 @@ function clearSearch(): void {
 // FILTER
 // =========================================================
 
-function getFilteredLessons(): Lesson[] {
+function getFilteredLessons():
+Lesson[] {
 
   if (!currentKeyword) {
 
@@ -330,7 +448,9 @@ function getFilteredLessons(): Lesson[] {
 
 
   return lessons.filter(
-    (lesson) => {
+    (
+      lesson: Lesson
+    ) => {
 
       const text =
         normalizeText(
@@ -339,7 +459,9 @@ function getFilteredLessons(): Lesson[] {
             lesson.description,
             lesson.level,
             ...lesson.keywords
-          ].join(" ")
+          ].join(
+            " "
+          )
         );
 
 
@@ -391,7 +513,8 @@ function renderSearchInfo(
 
   if (!currentKeyword) {
 
-    searchResultInfo.innerHTML = "";
+    searchResultInfo.innerHTML =
+      "";
 
     return;
 
@@ -444,13 +567,17 @@ function renderLessonGroups(
   lessonGroups.innerHTML =
     LEVEL_ORDER
       .map(
-        (level) =>
+        (
+          level: LessonLevel
+        ) =>
           renderLevel(
             level,
             filteredLessons
           )
       )
-      .join("");
+      .join(
+        ""
+      );
 
 }
 
@@ -466,8 +593,11 @@ function renderLevel(
 
   const levelLessons =
     filteredLessons.filter(
-      (lesson) =>
-        lesson.level === level
+      (
+        lesson: Lesson
+      ) =>
+        lesson.level ===
+        level
     );
 
 
@@ -533,7 +663,9 @@ function renderLevel(
           .map(
             renderLessonCard
           )
-          .join("")}
+          .join(
+            ""
+          )}
 
       </div>
 
@@ -562,8 +694,6 @@ function renderLessonCard(
       )}"
     >
 
-      <!-- NUMBER -->
-
       <span class="lesson-number">
 
         ${String(
@@ -575,8 +705,6 @@ function renderLessonCard(
 
       </span>
 
-
-      <!-- CONTENT -->
 
       <div class="lesson-card-content">
 
@@ -600,8 +728,6 @@ function renderLessonCard(
       </div>
 
 
-      <!-- ARROW -->
-
       <span
         class="lesson-arrow"
         aria-hidden="true"
@@ -622,7 +748,8 @@ function renderLessonCard(
 // EMPTY STATE
 // =========================================================
 
-function renderEmptyState(): string {
+function renderEmptyState():
+string {
 
   return `
 
@@ -678,18 +805,32 @@ function handleLessonClick(
   event: MouseEvent
 ): void {
 
+  if (
+    !(event.target instanceof Element)
+  ) {
+
+    return;
+
+  }
+
+
   const target =
-    event.target as HTMLElement;
+    event.target;
 
 
-  // nút clear empty
+  // =======================================================
+  // CLEAR EMPTY SEARCH
+  // =======================================================
+
   const emptyClear =
     target.closest(
       "#empty-clear-search"
     );
 
 
-  if (emptyClear) {
+  if (
+    emptyClear
+  ) {
 
     clearSearch();
 
@@ -697,6 +838,10 @@ function handleLessonClick(
 
   }
 
+
+  // =======================================================
+  // LESSON CARD
+  // =======================================================
 
   const card =
     target.closest<HTMLElement>(
@@ -724,8 +869,11 @@ function handleLessonClick(
 
   const lesson =
     lessons.find(
-      (item) =>
-        item.id === id
+      (
+        item: Lesson
+      ) =>
+        item.id ===
+        id
     );
 
 
@@ -751,13 +899,17 @@ function showLesson(
   lesson: Lesson
 ): void {
 
-  homeView.hidden = true;
+  homeView.hidden =
+    true;
 
-  lessonView.hidden = false;
+
+  lessonView.hidden =
+    false;
 
 
-  // Ẩn intro + search khi đọc bài
-  if (introSection) {
+  if (
+    introSection
+  ) {
 
     introSection.style.display =
       "none";
@@ -765,7 +917,9 @@ function showLesson(
   }
 
 
-  if (searchSection) {
+  if (
+    searchSection
+  ) {
 
     searchSection.style.display =
       "none";
@@ -784,8 +938,11 @@ function showLesson(
 
 
   window.scrollTo({
-    top: 0,
-    behavior: "smooth"
+    top:
+      0,
+
+    behavior:
+      "smooth"
   });
 
 }
@@ -800,15 +957,21 @@ function renderLessonHeader(
 ): void {
 
   const part =
-    getElement("lesson-part");
+    getElement(
+      "lesson-part"
+    );
 
 
   const level =
-    getElement("lesson-level");
+    getElement(
+      "lesson-level"
+    );
 
 
   const title =
-    getElement("lesson-title");
+    getElement(
+      "lesson-title"
+    );
 
 
   const description =
@@ -849,24 +1012,33 @@ function getLevelBadgeClass(
   level: LessonLevel
 ): string {
 
-  switch (level) {
+  const classes:
+    Record<
+      LessonLevel,
+      string
+    > = {
 
-    case "CƠ BẢN":
-      return "badge-basic";
+      "CƠ BẢN":
+        "badge-basic",
 
-    case "TRUNG CẤP":
-      return "badge-intermediate";
+      "TRUNG CẤP":
+        "badge-intermediate",
 
-    case "NÂNG CAO":
-      return "badge-advanced";
+      "NÂNG CAO":
+        "badge-advanced",
 
-    case "TRA CỨU":
-      return "badge-reference";
+      "TRA CỨU":
+        "badge-reference",
 
-    case "THỰC HÀNH":
-      return "badge-practice";
+      "THỰC HÀNH":
+        "badge-practice"
 
-  }
+    };
+
+
+  return classes[
+    level
+  ];
 
 }
 
@@ -882,7 +1054,10 @@ function renderLessonSections(
   lessonContent.innerHTML =
     lesson.sections
       .map(
-        (section, index) => `
+        (
+          section: LessonSection,
+          index: number
+        ) => `
 
           <article class="lesson-section">
 
@@ -917,7 +1092,9 @@ function renderLessonSections(
 
         `
       )
-      .join("");
+      .join(
+        ""
+      );
 
 }
 
@@ -928,12 +1105,17 @@ function renderLessonSections(
 
 function showHomeView(): void {
 
-  lessonView.hidden = true;
+  lessonView.hidden =
+    true;
 
-  homeView.hidden = false;
+
+  homeView.hidden =
+    false;
 
 
-  if (introSection) {
+  if (
+    introSection
+  ) {
 
     introSection.style.display =
       "";
@@ -941,7 +1123,9 @@ function showHomeView(): void {
   }
 
 
-  if (searchSection) {
+  if (
+    searchSection
+  ) {
 
     searchSection.style.display =
       "";
@@ -953,15 +1137,62 @@ function showHomeView(): void {
 
 
   window.scrollTo({
-    top: 0,
-    behavior: "smooth"
+    top:
+      0,
+
+    behavior:
+      "smooth"
   });
 
 }
 
 
 // =========================================================
-// ESCAPE
+// SHOW CHECKER VIEW
+// =========================================================
+
+function showCheckerView(): void {
+
+  learningArea.hidden =
+    true;
+
+
+  checkerPage.hidden =
+    false;
+
+
+  window.scrollTo({
+    top:
+      0,
+
+    behavior:
+      "smooth"
+  });
+
+}
+
+
+// =========================================================
+// SHOW LEARNING VIEW
+// =========================================================
+
+function showLearningView(): void {
+
+  checkerPage.hidden =
+    true;
+
+
+  learningArea.hidden =
+    false;
+
+
+  showHomeView();
+
+}
+
+
+// =========================================================
+// ESCAPE HTML
 // =========================================================
 
 function escapeHtml(

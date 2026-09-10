@@ -1,7 +1,9 @@
 <!DOCTYPE html>
+
 <html lang="vi">
 
 <head>
+
   <meta charset="UTF-8" />
 
   <meta
@@ -19,7 +21,9 @@
     content="#185abd"
   />
 
-  <title>Giáo Trình Microsoft Word</title>
+  <title>
+    Giáo Trình Microsoft Word
+  </title>
 
 
   <!-- =====================================================
@@ -28,17 +32,11 @@
 
   <script
     type="text/javascript"
-    src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js">
-  </script>
-
-
-  <!-- =====================================================
-       TASKPANE CSS
-  ====================================================== -->
-
-
+    src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"
+  ></script>
 
 </head>
+
 
 
 <body>
@@ -55,9 +53,13 @@
 
     <div class="loading-card">
 
+
       <div class="loading-logo">
+
         W
+
       </div>
+
 
       <div class="loading-info">
 
@@ -76,6 +78,7 @@
         class="loading-spinner"
         aria-hidden="true"
       ></div>
+
 
     </div>
 
@@ -101,10 +104,19 @@
     <header class="app-header">
 
 
-      <div class="header-decoration header-decoration-one"></div>
+      <!-- DECORATION -->
 
-      <div class="header-decoration header-decoration-two"></div>
+      <div
+        class="header-decoration header-decoration-one"
+      ></div>
 
+      <div
+        class="header-decoration header-decoration-two"
+      ></div>
+
+
+
+      <!-- BRAND -->
 
       <div class="brand">
 
@@ -120,26 +132,38 @@
         </div>
 
 
+
         <!-- BRAND TEXT -->
 
         <div class="brand-text">
 
+
           <div class="brand-eyebrow">
+
             MICROSOFT WORD
+
           </div>
 
+
           <h1>
+
             GIÁO TRÌNH WORD
+
           </h1>
 
+
           <p>
+
             Từ cơ bản đến nâng cao
+
           </p>
+
 
         </div>
 
 
       </div>
+
 
 
       <!-- VERSION -->
@@ -158,218 +182,480 @@
 
 
     <!-- ===================================================
-         INTRO
+         MAIN LEARNING AREA
     ==================================================== -->
 
-    <section class="intro-section">
+    <div id="learning-area">
 
 
-      <div class="intro-tag">
+      <!-- =================================================
+           INTRO
+      ================================================== -->
 
-        <span class="intro-tag-icon">
-          W
-        </span>
-
-        HỌC MICROSOFT WORD
-
-      </div>
+      <section class="intro-section">
 
 
-      <h2 class="intro-title">
+        <div class="intro-tag">
 
-        Học và tra cứu
-        <span>ngay trong Word</span>
-
-      </h2>
-
-
-      <p class="intro-description">
-
-        Phím tắt, thao tác và kỹ năng xử lý tài liệu
-        từ cơ bản đến chuyên nghiệp.
-
-      </p>
-
-
-    </section>
-
-
-
-    <!-- ===================================================
-         SEARCH
-    ==================================================== -->
-
-    <section class="search-section">
-
-
-      <div class="search-box">
-
-
-        <span
-          class="search-icon"
-          aria-hidden="true"
-        >
-          ⌕
-        </span>
-
-
-        <input
-          id="search"
-          type="search"
-          placeholder="Tìm Ctrl + J, mục lục, Section..."
-          autocomplete="off"
-          spellcheck="false"
-          aria-label="Tìm kiếm bài học"
-        />
-
-
-        <button
-          id="clear-search"
-          class="clear-search-button"
-          type="button"
-          title="Xóa tìm kiếm"
-          aria-label="Xóa tìm kiếm"
-        >
-          ×
-        </button>
-
-
-      </div>
-
-
-      <div class="search-helper">
-
-        <span>
-          Tra cứu nhanh
-        </span>
-
-        <span class="search-helper-dot">
-          •
-        </span>
-
-        <span>
-          38 phần
-        </span>
-
-        <span class="search-helper-dot">
-          •
-        </span>
-
-        <span>
-          Cơ bản → Nâng cao
-        </span>
-
-      </div>
-
-
-    </section>
-
-
-
-    <!-- ===================================================
-         HOME VIEW
-    ==================================================== -->
-
-    <section
-      id="home-view"
-      class="home-view"
-    >
-
-
-      <!-- SEARCH RESULT -->
-
-      <div
-        id="search-result-info"
-        class="search-result-info"
-      ></div>
-
-
-      <!-- LESSON GROUPS -->
-
-      <div
-        id="lesson-groups"
-        class="lesson-groups"
-      ></div>
-
-
-    </section>
-
-
-
-    <!-- ===================================================
-         LESSON VIEW
-    ==================================================== -->
-
-    <section
-      id="lesson-view"
-      class="lesson-view"
-      hidden
-    >
-
-
-      <!-- ===============================================
-           LESSON TOOLBAR
-      ================================================ -->
-
-      <div class="lesson-toolbar">
-
-
-        <button
-          id="back-button"
-          class="back-button"
-          type="button"
-          title="Quay lại danh sách bài học"
-        >
-
-          <span class="back-button-icon">
-            ←
+          <span class="intro-tag-icon">
+            W
           </span>
+
+          HỌC MICROSOFT WORD
+
+        </div>
+
+
+
+        <h2 class="intro-title">
+
+          Học và tra cứu
 
           <span>
-            Quay lại
+            ngay trong Word
           </span>
 
-        </button>
-
-
-        <span
-          id="lesson-part"
-          class="lesson-part"
-        ></span>
-
-
-      </div>
+        </h2>
 
 
 
-      <!-- ===============================================
-           LESSON HERO
-      ================================================ -->
+        <p class="intro-description">
 
-      <header class="lesson-header">
+          Phím tắt, thao tác và kỹ năng xử lý tài liệu
+          từ cơ bản đến chuyên nghiệp.
 
-
-        <div class="lesson-header-top">
+        </p>
 
 
-          <span
-            id="lesson-level"
-            class="level-badge"
-          ></span>
+
+        <!-- ===============================================
+             CHECKER ENTRY
+        ================================================ -->
+
+        <div class="intro-tools">
 
 
-          <div class="lesson-header-word">
-            W
-          </div>
+          <button
+            id="open-checker-button"
+            class="open-checker-button"
+            type="button"
+          >
+
+            <span
+              class="open-checker-icon"
+              aria-hidden="true"
+            >
+              ✓
+            </span>
+
+
+            <span class="open-checker-content">
+
+              <strong>
+                Kiểm tra văn bản
+              </strong>
+
+              <small>
+                Chính tả • Ngữ pháp • Ngữ cảnh
+              </small>
+
+            </span>
+
+
+            <span
+              class="open-checker-arrow"
+              aria-hidden="true"
+            >
+              ›
+            </span>
+
+
+          </button>
 
 
         </div>
 
 
-        <h2 id="lesson-title"></h2>
+      </section>
 
 
-        <p id="lesson-description"></p>
+
+      <!-- =================================================
+           SEARCH
+      ================================================== -->
+
+      <section class="search-section">
+
+
+        <div class="search-box">
+
+
+          <span
+            class="search-icon"
+            aria-hidden="true"
+          >
+
+            ⌕
+
+          </span>
+
+
+
+          <input
+            id="search"
+            type="search"
+            placeholder="Tìm Ctrl + J, mục lục, Section..."
+            autocomplete="off"
+            spellcheck="false"
+            aria-label="Tìm kiếm bài học"
+          />
+
+
+
+          <button
+            id="clear-search"
+            class="clear-search-button"
+            type="button"
+            title="Xóa tìm kiếm"
+            aria-label="Xóa tìm kiếm"
+          >
+
+            ×
+
+          </button>
+
+
+        </div>
+
+
+
+        <div class="search-helper">
+
+
+          <span>
+            Tra cứu nhanh
+          </span>
+
+
+          <span class="search-helper-dot">
+            •
+          </span>
+
+
+          <span>
+            38 phần
+          </span>
+
+
+          <span class="search-helper-dot">
+            •
+          </span>
+
+
+          <span>
+            Cơ bản → Nâng cao
+          </span>
+
+
+        </div>
+
+
+      </section>
+
+
+
+      <!-- =================================================
+           HOME VIEW
+      ================================================== -->
+
+      <section
+        id="home-view"
+        class="home-view"
+      >
+
+
+        <!-- SEARCH RESULT -->
+
+        <div
+          id="search-result-info"
+          class="search-result-info"
+        ></div>
+
+
+
+        <!-- LESSON GROUPS -->
+
+        <div
+          id="lesson-groups"
+          class="lesson-groups"
+        ></div>
+
+
+      </section>
+
+
+
+      <!-- =================================================
+           LESSON VIEW
+      ================================================== -->
+
+      <section
+        id="lesson-view"
+        class="lesson-view"
+        hidden
+      >
+
+
+        <!-- ===============================================
+             LESSON TOOLBAR
+        ================================================ -->
+
+        <div class="lesson-toolbar">
+
+
+          <button
+            id="back-button"
+            class="back-button"
+            type="button"
+            title="Quay lại danh sách bài học"
+          >
+
+
+            <span class="back-button-icon">
+
+              ←
+
+            </span>
+
+
+            <span>
+
+              Quay lại
+
+            </span>
+
+
+          </button>
+
+
+
+          <span
+            id="lesson-part"
+            class="lesson-part"
+          ></span>
+
+
+        </div>
+
+
+
+        <!-- ===============================================
+             LESSON HERO
+        ================================================ -->
+
+        <header class="lesson-header">
+
+
+          <div class="lesson-header-top">
+
+
+            <span
+              id="lesson-level"
+              class="level-badge"
+            ></span>
+
+
+
+            <div class="lesson-header-word">
+
+              W
+
+            </div>
+
+
+          </div>
+
+
+
+          <h2
+            id="lesson-title"
+          ></h2>
+
+
+
+          <p
+            id="lesson-description"
+          ></p>
+
+
+        </header>
+
+
+
+        <!-- ===============================================
+             LESSON BODY
+        ================================================ -->
+
+        <div
+          id="lesson-content"
+          class="lesson-content"
+        ></div>
+
+
+
+        <!-- ===============================================
+             LESSON BOTTOM
+        ================================================ -->
+
+        <div class="lesson-bottom">
+
+
+          <button
+            id="back-button-bottom"
+            class="back-button-bottom"
+            type="button"
+          >
+
+
+            <span>
+
+              ←
+
+            </span>
+
+
+            Quay lại danh sách bài học
+
+
+          </button>
+
+
+        </div>
+
+
+      </section>
+
+
+    </div>
+
+
+
+    <!-- ===================================================
+         CHECKER PAGE
+    ==================================================== -->
+
+    <section
+      id="checker-page"
+      class="checker-page"
+      hidden
+    >
+
+
+      <!-- ===============================================
+           CHECKER TOOLBAR
+      ================================================ -->
+
+      <div class="checker-toolbar">
+
+
+        <button
+          id="checker-back-button"
+          class="back-button"
+          type="button"
+          title="Quay lại giáo trình"
+        >
+
+
+          <span class="back-button-icon">
+
+            ←
+
+          </span>
+
+
+          <span>
+
+            Giáo trình
+
+          </span>
+
+
+        </button>
+
+
+
+        <span class="checker-toolbar-title">
+
+          TRỢ LÝ VIẾT
+
+        </span>
+
+
+      </div>
+
+
+
+      <!-- ===============================================
+           CHECKER HERO
+      ================================================ -->
+
+      <header class="checker-hero">
+
+
+        <div class="checker-heading">
+
+
+          <div class="checker-heading-content">
+
+
+            <div class="checker-heading-icon">
+
+              ✓
+
+            </div>
+
+
+
+            <div>
+
+
+              <div class="checker-eyebrow">
+
+                WRITING ASSISTANT
+
+              </div>
+
+
+              <h2>
+
+                Kiểm tra văn bản
+
+              </h2>
+
+
+              <p>
+
+                Phát hiện lỗi chính tả, ngữ pháp,
+                cách dùng từ và ngữ cảnh.
+
+              </p>
+
+
+            </div>
+
+
+          </div>
+
+
+
+          <span class="checker-auto-badge">
+
+            AUTO
+
+          </span>
+
+
+        </div>
 
 
       </header>
@@ -377,34 +663,347 @@
 
 
       <!-- ===============================================
-           LESSON BODY
+           CHECKER SUMMARY
       ================================================ -->
 
-      <div
-        id="lesson-content"
-        class="lesson-content"
-      ></div>
+      <section class="checker-summary">
+
+
+        <!-- SCORE -->
+
+        <div class="checker-score-card">
+
+
+          <div class="checker-score-icon">
+
+            A
+
+          </div>
+
+
+          <strong
+            id="checker-score"
+          >
+
+            --
+
+          </strong>
+
+
+          <span>
+
+            Điểm văn bản
+
+          </span>
+
+
+        </div>
+
+
+
+        <!-- ISSUES -->
+
+        <div class="checker-count-card">
+
+
+          <div class="checker-count-icon">
+
+            !
+
+          </div>
+
+
+          <strong
+            id="checker-count"
+          >
+
+            0
+
+          </strong>
+
+
+          <span>
+
+            vấn đề
+
+          </span>
+
+
+        </div>
+
+
+      </section>
 
 
 
       <!-- ===============================================
-           LESSON BOTTOM
+           LANGUAGE
       ================================================ -->
 
-      <div class="lesson-bottom">
+      <section class="checker-language">
+
+
+        <div class="checker-language-left">
+
+
+          <span class="checker-language-icon">
+
+            文
+
+          </span>
+
+
+          <div>
+
+            <small>
+
+              Ngôn ngữ
+
+            </small>
+
+
+            <strong
+              id="checker-language"
+            >
+
+              Tự động nhận diện
+
+            </strong>
+
+          </div>
+
+
+        </div>
+
+
+
+        <span class="checker-language-auto">
+
+          AUTO
+
+        </span>
+
+
+      </section>
+
+
+
+      <!-- ===============================================
+           CHECK BUTTON
+      ================================================ -->
+
+      <button
+        id="checker-run"
+        class="checker-run"
+        type="button"
+      >
+
+
+        <span
+          class="checker-run-icon"
+          aria-hidden="true"
+        >
+
+          ✦
+
+        </span>
+
+
+        <span>
+
+          Kiểm tra toàn bộ văn bản
+
+        </span>
+
+
+      </button>
+
+
+
+      <!-- ===============================================
+           STATUS
+      ================================================ -->
+
+      <div
+        id="checker-status-wrapper"
+        class="checker-status-wrapper"
+      >
+
+
+        <span
+          class="checker-status-dot"
+          aria-hidden="true"
+        ></span>
+
+
+        <p
+          id="checker-status"
+          class="checker-status"
+        >
+
+          Sẵn sàng kiểm tra tài liệu.
+
+        </p>
+
+
+      </div>
+
+
+
+      <!-- ===============================================
+           FILTERS
+      ================================================ -->
+
+      <div class="checker-filter-bar">
 
 
         <button
-          id="back-button-bottom"
+          type="button"
+          class="checker-filter active"
+          data-checker-filter="all"
+        >
+
+          Tất cả
+
+        </button>
+
+
+        <button
+          type="button"
+          class="checker-filter"
+          data-checker-filter="spelling"
+        >
+
+          Chính tả
+
+        </button>
+
+
+        <button
+          type="button"
+          class="checker-filter"
+          data-checker-filter="grammar"
+        >
+
+          Ngữ pháp
+
+        </button>
+
+
+        <button
+          type="button"
+          class="checker-filter"
+          data-checker-filter="context"
+        >
+
+          Ngữ cảnh
+
+        </button>
+
+
+      </div>
+
+
+
+      <!-- ===============================================
+           ISSUE LIST
+      ================================================ -->
+
+      <section class="checker-results">
+
+
+        <div class="checker-results-header">
+
+
+          <div>
+
+            <h3>
+
+              Kết quả kiểm tra
+
+            </h3>
+
+
+            <p>
+
+              Chọn một gợi ý để chỉnh sửa trực tiếp
+              trong tài liệu Word.
+
+            </p>
+
+          </div>
+
+
+        </div>
+
+
+
+        <div
+          id="checker-issues"
+          class="checker-issues"
+        >
+
+
+          <!-- DEFAULT EMPTY STATE -->
+
+          <div class="checker-empty">
+
+
+            <div class="checker-empty-icon">
+
+              ✓
+
+            </div>
+
+
+            <strong>
+
+              Chưa kiểm tra văn bản
+
+            </strong>
+
+
+            <p>
+
+              Nhấn “Kiểm tra toàn bộ văn bản”
+              để bắt đầu rà soát tài liệu.
+
+            </p>
+
+
+          </div>
+
+
+        </div>
+
+
+      </section>
+
+
+
+      <!-- ===============================================
+           CHECKER BOTTOM
+      ================================================ -->
+
+      <div class="checker-bottom">
+
+
+        <button
+          id="checker-back-button-bottom"
           class="back-button-bottom"
           type="button"
         >
 
+
           <span>
+
             ←
+
           </span>
 
-          Quay lại danh sách bài học
+
+          Quay lại Giáo Trình Word
+
 
         </button>
 
@@ -425,28 +1024,43 @@
 
       <div class="footer-brand">
 
+
         <span class="footer-logo">
+
           W
+
         </span>
+
 
 
         <div>
 
+
           <strong>
+
             Giáo Trình Word
+
           </strong>
 
+
           <small>
+
             Microsoft Word Learning Center
+
           </small>
 
+
         </div>
+
 
       </div>
 
 
+
       <span class="footer-version">
+
         2026
+
       </span>
 
 
