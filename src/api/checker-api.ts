@@ -2,11 +2,37 @@ import {
   CHECKER_CONFIG
 } from "../config/checker.config";
 
-
 import type {
   CheckDocumentRequest,
   CheckDocumentResponse
 } from "../types/checker.types";
+
+
+// =========================================================
+// GET API URL
+// =========================================================
+
+function getCheckerApiUrl(): string {
+
+  const baseUrl =
+    CHECKER_CONFIG.API_BASE_URL
+      ?.trim()
+      .replace(
+        /\/+$/,
+        ""
+      ) ?? "";
+
+
+  if (!baseUrl) {
+
+    return "/api/checker/check";
+
+  }
+
+
+  return `${baseUrl}/api/checker/check`;
+
+}
 
 
 // =========================================================
@@ -32,21 +58,37 @@ export async function checkDocumentApi(
     );
 
 
+  const apiUrl =
+    getCheckerApiUrl();
+
+
   try {
 
+    console.log(
+      "Checker API:",
+      apiUrl
+    );
+
+
     // =====================================================
-    // CALL BACKEND API
+    // CALL BACKEND
     // =====================================================
 
     const response =
       await fetch(
-        `${CHECKER_CONFIG.API_BASE_URL}/api/checker/check`,
+        apiUrl,
         {
-          method: "POST",
+          method:
+            "POST",
 
           headers: {
+
             "Content-Type":
+              "application/json",
+
+            "Accept":
               "application/json"
+
           },
 
           body:
@@ -64,28 +106,28 @@ export async function checkDocumentApi(
     // HANDLE HTTP ERROR
     // =====================================================
 
-    if (
-      !response.ok
-    ) {
+    if (!response.ok) {
 
       const message =
         await response.text();
 
 
       throw new Error(
-        `Checker API ${response.status}: ${message}`
+        `Checker API ${response.status}: ${
+          message ||
+          response.statusText
+        }`
       );
 
     }
 
 
     // =====================================================
-    // READ RESPONSE
+    // RESPONSE
     // =====================================================
 
-    const result:
-      CheckDocumentResponse =
-        await response.json();
+    const result =
+      (await response.json()) as CheckDocumentResponse;
 
 
     return result;
@@ -94,6 +136,15 @@ export async function checkDocumentApi(
   catch (
     error
   ) {
+
+    console.error(
+      "Checker API Error:",
+      {
+        apiUrl,
+        error
+      }
+    );
+
 
     // =====================================================
     // TIMEOUT
@@ -112,7 +163,7 @@ export async function checkDocumentApi(
 
 
     // =====================================================
-    // NETWORK / BACKEND ERROR
+    // NETWORK ERROR
     // =====================================================
 
     if (
@@ -120,7 +171,7 @@ export async function checkDocumentApi(
     ) {
 
       throw new Error(
-        "Không thể kết nối tới Checker API. Vui lòng kiểm tra backend đang chạy."
+        `Không thể kết nối tới Checker API (${apiUrl}).`
       );
 
     }
@@ -130,10 +181,6 @@ export async function checkDocumentApi(
 
   }
   finally {
-
-    // =====================================================
-    // CLEAR TIMEOUT
-    // =====================================================
 
     window.clearTimeout(
       timeout

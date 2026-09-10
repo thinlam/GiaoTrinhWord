@@ -1,5 +1,4 @@
 export const CHECKER_CONFIG = {
-  API_BASE_URL: "https://localhost:7001",
-
+  API_BASE_URL: "",
   REQUEST_TIMEOUT: 60000
 };

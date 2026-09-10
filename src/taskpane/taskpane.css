@@ -2672,3 +2672,278 @@ summary {
 
   font-size: 11px;
 }
+/* =========================================================
+   CHECKER ENTRY CARD
+========================================================= */
+
+.checker-entry-card {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  margin-top: 14px;
+  padding: 12px 14px;
+
+  border: 1px solid #d7e4f7;
+  border-radius: 14px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ffffff 0%,
+      #f5f9ff 100%
+    );
+
+  box-shadow:
+    0 3px 10px rgba(15, 23, 42, 0.05);
+
+  cursor: pointer;
+
+  text-align: left;
+
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease;
+
+  font-family:
+    "Segoe UI",
+    Arial,
+    sans-serif;
+}
+
+
+/* =========================================================
+   HOVER
+========================================================= */
+
+.checker-entry-card:hover {
+  transform: translateY(-1px);
+
+  border-color: #8bb8f8;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ffffff 0%,
+      #edf5ff 100%
+    );
+
+  box-shadow:
+    0 7px 20px rgba(37, 99, 235, 0.12);
+}
+
+
+/* =========================================================
+   ACTIVE
+========================================================= */
+
+.checker-entry-card:active {
+  transform: translateY(0);
+
+  box-shadow:
+    0 3px 8px rgba(37, 99, 235, 0.08);
+}
+
+
+/* =========================================================
+   FOCUS
+========================================================= */
+
+.checker-entry-card:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.18);
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.checker-entry-icon {
+  width: 42px;
+  height: 42px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb 0%,
+      #0f5cc0 100%
+    );
+
+  box-shadow:
+    0 4px 12px rgba(37, 99, 235, 0.22);
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.checker-entry-content {
+  min-width: 0;
+
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+
+/* =========================================================
+   TITLE ROW
+========================================================= */
+
+.checker-entry-title-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+.checker-entry-title {
+  color: #0f172a;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  line-height: 1.3;
+}
+
+
+/* =========================================================
+   AI BADGE
+========================================================= */
+
+.checker-entry-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 27px;
+
+  padding: 2px 6px;
+
+  border-radius: 999px;
+
+  background: #e7f0ff;
+
+  color: #1d4ed8;
+
+  font-size: 9px;
+  font-weight: 800;
+
+  letter-spacing: 0.3px;
+}
+
+
+/* =========================================================
+   DESCRIPTION
+========================================================= */
+
+.checker-entry-description {
+  overflow: hidden;
+
+  color: #64748b;
+
+  font-size: 11px;
+  font-weight: 400;
+
+  line-height: 1.45;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   ARROW
+========================================================= */
+
+.checker-entry-arrow {
+  width: 30px;
+  height: 30px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  color: #64748b;
+
+  transition:
+    transform 0.18s ease,
+    color 0.18s ease,
+    background 0.18s ease;
+}
+
+
+.checker-entry-card:hover
+.checker-entry-arrow {
+  transform: translateX(2px);
+
+  color: #2563eb;
+
+  background: #eaf2ff;
+}
+
+
+/* =========================================================
+   RESPONSIVE FOR NARROW WORD TASK PANE
+========================================================= */
+
+@media (max-width: 360px) {
+
+  .checker-entry-card {
+    gap: 10px;
+
+    padding: 11px 12px;
+  }
+
+
+  .checker-entry-icon {
+    width: 38px;
+    height: 38px;
+
+    border-radius: 11px;
+  }
+
+
+  .checker-entry-title {
+    font-size: 13px;
+  }
+
+
+  .checker-entry-description {
+    font-size: 10px;
+  }
+
+
+  .checker-entry-arrow {
+    width: 26px;
+    height: 26px;
+  }
+
+}

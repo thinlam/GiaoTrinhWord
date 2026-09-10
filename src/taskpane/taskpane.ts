@@ -1,17 +1,14 @@
 import "./taskpane.css";
 
-
 import {
   lessons
 } from "../lessons/lessons";
-
 
 import type {
   Lesson,
   LessonLevel,
   LessonSection
 } from "../types/lesson.types";
-
 
 import {
   initChecker
@@ -81,8 +78,6 @@ let homeView: HTMLElement;
 
 let lessonView: HTMLElement;
 
-let checkerPage: HTMLElement;
-
 let lessonGroups: HTMLElement;
 
 let searchResultInfo: HTMLElement;
@@ -93,51 +88,225 @@ let searchInput: HTMLInputElement;
 
 let clearSearchButton: HTMLButtonElement;
 
-let openCheckerButton: HTMLButtonElement;
 
-let checkerBackButton: HTMLButtonElement;
+// Checker là chức năng phụ.
+// Không được để thiếu DOM của Checker làm chết toàn bộ Giáo Trình.
+let checkerPage: HTMLElement | null = null;
 
-let checkerBackButtonBottom: HTMLButtonElement;
+let openCheckerButton: HTMLButtonElement | null = null;
 
-let introSection: HTMLElement | null;
+let checkerBackButton: HTMLButtonElement | null = null;
 
-let searchSection: HTMLElement | null;
+let checkerBackButtonBottom: HTMLButtonElement | null = null;
+
+
+let introSection: HTMLElement | null = null;
+
+let searchSection: HTMLElement | null = null;
 
 
 let currentKeyword = "";
 
+let appStarted = false;
+
 
 // =========================================================
-// START OFFICE
+// START APPLICATION
+// Không dùng Office.onReady() để chặn giao diện.
+// VSTO WebView2 chỉ cần DOM tải xong là có thể render.
 // =========================================================
 
-Office.onReady((info) => {
+function startApplication(): void {
 
-  if (
-    info.host !==
-    Office.HostType.Word
-  ) {
+  if (appStarted) {
+    return;
+  }
 
-    console.warn(
-      "Add-in này chỉ hỗ trợ Microsoft Word."
+  appStarted = true;
+
+
+  try {
+
+    // 1. Lấy DOM bắt buộc của Giáo Trình.
+    initializeDOM();
+
+    // 2. Gắn event.
+    bindEvents();
+
+    // 3. Hiện ứng dụng trước.
+    // Không để Checker/Office.js giữ màn hình loading.
+    showApplication();
+
+    // 4. Render danh sách bài học.
+    renderHome();
+
+
+    // 5. Khởi tạo Checker riêng biệt.
+    // Checker lỗi thì Giáo Trình vẫn phải hoạt động.
+    try {
+
+      initChecker();
+
+      console.log(
+        "✅ Checker initialized."
+      );
+
+    } catch (checkerError) {
+
+      console.error(
+        "⚠️ Checker init failed:",
+        checkerError
+      );
+
+    }
+
+
+    console.log(
+      "✅ Giao Trình Word started successfully."
     );
+
+  } catch (error) {
+
+    console.error(
+      "❌ Giao Trình Word startup error:",
+      error
+    );
+
+    showStartupError(
+      error
+    );
+
+  }
+
+}
+
+
+// =========================================================
+// DOM READY
+// =========================================================
+
+if (
+  document.readyState ===
+  "loading"
+) {
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    startApplication,
+    {
+      once: true
+    }
+  );
+
+} else {
+
+  startApplication();
+
+}
+
+
+// =========================================================
+// STARTUP ERROR
+// Nếu có lỗi thật thì hiển thị lỗi thay vì quay loading mãi.
+// =========================================================
+
+function showStartupError(
+  error: unknown
+): void {
+
+  const message =
+    error instanceof Error
+      ? error.message
+      : String(error);
+
+
+  const loadingElement =
+    document.getElementById(
+      "sideload-msg"
+    );
+
+
+  const bodyElement =
+    document.getElementById(
+      "app-body"
+    );
+
+
+  if (bodyElement) {
+
+    bodyElement.style.display =
+      "none";
+
+  }
+
+
+  if (!loadingElement) {
 
     return;
 
   }
 
 
-  initializeDOM();
+  loadingElement.style.display =
+    "block";
 
-  bindEvents();
 
-  initChecker();
+  loadingElement.innerHTML = `
 
-  showApplication();
+    <div
+      style="
+        max-width: 420px;
+        margin: 48px auto;
+        padding: 24px;
+        text-align: center;
+        font-family: Segoe UI, Arial, sans-serif;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      "
+    >
 
-  renderHome();
+      <div
+        style="
+          font-size: 34px;
+          line-height: 1;
+          margin-bottom: 14px;
+        "
+        aria-hidden="true"
+      >
+        ⚠️
+      </div>
 
-});
+
+      <h3
+        style="
+          margin: 0 0 8px;
+          color: #111827;
+          font-size: 17px;
+        "
+      >
+        Không thể tải Giáo Trình Word
+      </h3>
+
+
+      <p
+        style="
+          margin: 0;
+          color: #667085;
+          font-size: 13px;
+          line-height: 1.6;
+          word-break: break-word;
+        "
+      >
+        ${escapeHtml(message)}
+      </p>
+
+    </div>
+
+  `;
+
+}
 
 
 // =========================================================
@@ -145,6 +314,11 @@ Office.onReady((info) => {
 // =========================================================
 
 function initializeDOM(): void {
+
+  // =======================================================
+  // DOM BẮT BUỘC CỦA GIÁO TRÌNH
+  // Thiếu các element này thì cần báo lỗi rõ ràng.
+  // =======================================================
 
   appBody =
     getElement(
@@ -173,12 +347,6 @@ function initializeDOM(): void {
   lessonView =
     getElement(
       "lesson-view"
-    );
-
-
-  checkerPage =
-    getElement(
-      "checker-page"
     );
 
 
@@ -212,34 +380,64 @@ function initializeDOM(): void {
     );
 
 
-  openCheckerButton =
-    getElement<HTMLButtonElement>(
-      "open-checker-button"
+  // =======================================================
+  // DOM TÙY CHỌN CỦA CHECKER
+  // Không dùng getElement() vì Checker có thể chưa tồn tại
+  // trong một số giao diện/build.
+  // =======================================================
+
+  checkerPage =
+    document.getElementById(
+      "checker-page"
     );
+
+
+  openCheckerButton =
+    document.getElementById(
+      "open-checker-button"
+    ) as HTMLButtonElement | null;
 
 
   checkerBackButton =
-    getElement<HTMLButtonElement>(
+    document.getElementById(
       "checker-back-button"
-    );
+    ) as HTMLButtonElement | null;
 
 
   checkerBackButtonBottom =
-    getElement<HTMLButtonElement>(
+    document.getElementById(
       "checker-back-button-bottom"
-    );
+    ) as HTMLButtonElement | null;
 
 
   introSection =
-    document.querySelector(
+    document.querySelector<HTMLElement>(
       ".intro-section"
     );
 
 
   searchSection =
-    document.querySelector(
+    document.querySelector<HTMLElement>(
       ".search-section"
     );
+
+
+  console.log(
+    "DOM initialized",
+    {
+      hasCheckerPage:
+        checkerPage !== null,
+
+      hasOpenCheckerButton:
+        openCheckerButton !== null,
+
+      hasCheckerBackButton:
+        checkerBackButton !== null,
+
+      hasCheckerBackButtonBottom:
+        checkerBackButtonBottom !== null
+    }
+  );
 
 }
 
@@ -334,19 +532,19 @@ function bindEvents(): void {
     );
 
 
-  openCheckerButton.addEventListener(
+  openCheckerButton?.addEventListener(
     "click",
     showCheckerView
   );
 
 
-  checkerBackButton.addEventListener(
+  checkerBackButton?.addEventListener(
     "click",
     showLearningView
   );
 
 
-  checkerBackButtonBottom.addEventListener(
+  checkerBackButtonBottom?.addEventListener(
     "click",
     showLearningView
   );
@@ -636,11 +834,11 @@ function renderLevel(
           <div>
 
             <h2>
-              ${level}
+              ${escapeHtml(level)}
             </h2>
 
             <p class="lesson-group-description">
-              ${config.description}
+              ${escapeHtml(config.description)}
             </p>
 
           </div>
@@ -1153,6 +1351,17 @@ function showHomeView(): void {
 
 function showCheckerView(): void {
 
+  if (!checkerPage) {
+
+    console.warn(
+      "Không tìm thấy #checker-page."
+    );
+
+    return;
+
+  }
+
+
   learningArea.hidden =
     true;
 
@@ -1178,8 +1387,14 @@ function showCheckerView(): void {
 
 function showLearningView(): void {
 
-  checkerPage.hidden =
-    true;
+  if (
+    checkerPage
+  ) {
+
+    checkerPage.hidden =
+      true;
+
+  }
 
 
   learningArea.hidden =
